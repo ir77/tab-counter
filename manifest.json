@@ -10,6 +10,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Tab Counter"
+    "default_title": "Tab Counter",
+    "default_popup": "popup.html"
   }
 }
