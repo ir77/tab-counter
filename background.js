@@ -1,11 +1,11 @@
+import { getTabCount } from './common.js';
+
 // タブの数を更新する非同期関数
 async function updateTabCount() {
-  // 現在開いているすべてのタブ情報を取得
-  const tabs = await chrome.tabs.query({});
-  const tabCount = tabs.length.toString();
+  const tabCount = await getTabCount();
 
   // 拡張機能アイコンのバッジにタブ数を表示
-  chrome.action.setBadgeText({ text: tabCount });
+  chrome.action.setBadgeText({ text: tabCount.toString() });
   // バッジの背景色を青に設定（オプション）
   chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
 }
