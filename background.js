@@ -10,12 +10,7 @@ async function updateTabCount() {
   chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
 }
 
-// 拡張機能がインストールされた、またはChromeが起動した時に一度実行
-chrome.runtime.onStartup.addListener(updateTabCount);
-chrome.runtime.onInstalled.addListener(updateTabCount);
-
-// 新しいタブが作成された時に実行
-chrome.tabs.onCreated.addListener(updateTabCount);
-
-// タブが閉じられた時に実行
-chrome.tabs.onRemoved.addListener(updateTabCount);
+chrome.runtime.onStartup.addListener(updateTabCount); // Chrome起動時
+chrome.runtime.onInstalled.addListener(updateTabCount); // 拡張機能インストール時
+chrome.tabs.onCreated.addListener(updateTabCount); // 新しいタブが作成された時
+chrome.tabs.onRemoved.addListener(updateTabCount); // タブが閉じられた時
