@@ -8,6 +8,9 @@ async function updateTabCount() {
   chrome.action.setBadgeText({ text: tabCount.toString() });
   // バッジの背景色を青に設定（オプション）
   chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
+
+  // ストレージにタブ数を保存
+  await chrome.storage.local.set({ tabCount: tabCount });
 }
 
 // 拡張機能がインストールされた、またはChromeが起動した時に一度実行
