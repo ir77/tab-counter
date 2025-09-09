@@ -1,0 +1,27 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "開いているタブの数をアイコンに表示するGoogle Chrome拡張機能です。",
+  "main": "background.js",
+  "scripts": {
+    "build": "./node_modules/.bin/vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ir77/tab-counter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ir77/tab-counter/issues"
+  },
+  "homepage": "https://github.com/ir77/tab-counter#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.1.6",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
+  }
+}

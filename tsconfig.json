@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["chrome"],
+    "noEmit": true // Viteがバンドルするので、TypeScriptコンパイラ自身はファイルを出力しない
+  },
+  "include": ["*.ts"], // ルートディレクトリの.tsファイルを対象にする
+  "exclude": ["node_modules"]
+}
