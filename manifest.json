@@ -4,7 +4,8 @@
   "version": "1.0",
   "description": "現在開いているタブの数をアイコンに表示します。",
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js",
