@@ -2,10 +2,11 @@
 const tabCountElement = document.getElementById('tabCount');
 const highCountElement = document.getElementById('highCount');
 const lowCountElement = document.getElementById('lowCount');
+const previousDayLastCountElement = document.getElementById('previousDayLastCount');
 
 // ストレージから値を読み込んで表示する関数
 function updateUI() {
-  chrome.storage.local.get(['tabCount', 'dailyStats'], (result) => {
+  chrome.storage.local.get(['tabCount', 'dailyStats', 'lastAvailablePreviousDayCount'], (result) => {
     // 現在のタブ数を表示
     const count = result.tabCount !== undefined ? result.tabCount : '...';
     tabCountElement.textContent = count;
@@ -18,6 +19,10 @@ function updateUI() {
       highCountElement.textContent = '...';
       lowCountElement.textContent = '...';
     }
+
+    // 前日の最後の値を表示
+    const previousDayCount = result.lastAvailablePreviousDayCount !== undefined ? result.lastAvailablePreviousDayCount : '...';
+    previousDayLastCountElement.textContent = previousDayCount;
   });
 }
 
@@ -33,6 +38,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.dailyStats) {
       highCountElement.textContent = changes.dailyStats.newValue.high;
       lowCountElement.textContent = changes.dailyStats.newValue.low;
+    }
+    if (changes.lastAvailablePreviousDayCount) {
+      previousDayLastCountElement.textContent = changes.lastAvailablePreviousDayCount.newValue;
     }
   }
 });
