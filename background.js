@@ -1,60 +1,80 @@
 import { getTabCount } from './common.js';
+import { STORAGE_KEYS } from './constants.js';
 
-// タブの数を更新する非同期関数
-async function updateTabCount() {
-  const tabCount = await getTabCount();
-
-  // 拡張機能アイコンのバッジにタブ数を表示
-  chrome.action.setBadgeText({ text: tabCount.toString() });
-  // バッジの背景色を青に設定（オプション）
+/**
+ * 拡張機能のバッジを更新する
+ * @param {number} count - 表示するタブ数
+ */
+function updateBadge(count) {
+  chrome.action.setBadgeText({ text: count.toString() });
   chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
+}
 
-  // 今日の日付を YYYY-MM-DD 形式で取得
-  const today = new Date().toLocaleDateString('sv-SE');
-  // ストレージから必要なデータを取得
-  const { dailyStats, tabCount: lastStoredTabCount, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'tabCount', 'lastAvailablePreviousDayCount']);
+/**
+ * 日々の統計データを計算・更新する
+ * @param {number} currentTabCount - 現在のタブ数
+ * @returns {Promise<object>} ストレージに保存するためのデータオブジェクト
+ */
+async function calculateNextStats(currentTabCount) {
+  const todayStr = new Date().toLocaleDateString('sv-SE');
+  const storageKeyList = Object.values(STORAGE_KEYS);
+  const result = await chrome.storage.local.get(storageKeyList);
 
-  let todayStats;
-  let newPreviousDayCount = lastAvailablePreviousDayCount; // デフォルトで既存の値を引き継ぐ
+  const dailyStats = result[STORAGE_KEYS.DAILY_STATS];
+  const lastStoredTabCount = result[STORAGE_KEYS.TAB_COUNT];
+  const previousDayTabCount = result[STORAGE_KEYS.PREVIOUS_DAY_COUNT];
 
-  // 今日の日付と保存されている日付が違う、またはデータがない場合
-  if (!dailyStats || dailyStats.date !== today) {
-    // dailyStatsが存在する場合（つまり、初回起動ではない新しい日）
+  let newDailyStats;
+  let newPreviousDayCount = previousDayTabCount;
+
+  const isNewDay = !dailyStats || dailyStats.date !== todayStr;
+
+  if (isNewDay) {
+    // 新しい日になった場合
     if (dailyStats) {
-      // 前日の最後のタブ数としてlastStoredTabCountを保存
+      // 前日の最後のタブ数を保存
       newPreviousDayCount = lastStoredTabCount;
     }
     // 新しい統計データを作成
-    todayStats = {
-      date: today,
-      high: tabCount,
-      low: tabCount,
+    newDailyStats = {
+      date: todayStr,
+      high: currentTabCount,
+      low: currentTabCount,
     };
   } else {
-    // 保存されているデータがあれば、最高値と最低値を更新
-    todayStats = {
+    // 同じ日の場合、最高値と最低値を更新
+    newDailyStats = {
       ...dailyStats,
-      high: Math.max(dailyStats.high, tabCount),
-      low: Math.min(dailyStats.low, tabCount),
+      high: Math.max(dailyStats.high, currentTabCount),
+      low: Math.min(dailyStats.low, currentTabCount),
     };
   }
 
-  // ストレージに保存するデータを準備
   const dataToSet = {
-    tabCount: tabCount,
-    dailyStats: todayStats
+    [STORAGE_KEYS.TAB_COUNT]: currentTabCount,
+    [STORAGE_KEYS.DAILY_STATS]: newDailyStats,
   };
 
-  // newPreviousDayCountがundefinedでない場合のみ保存
+  // 前日のカウントが更新された場合のみ、データに含める
   if (newPreviousDayCount !== undefined) {
-    dataToSet.lastAvailablePreviousDayCount = newPreviousDayCount;
+    dataToSet[STORAGE_KEYS.PREVIOUS_DAY_COUNT] = newPreviousDayCount;
   }
 
-  // ストレージにデータを保存
-  await chrome.storage.local.set(dataToSet);
+  return dataToSet;
 }
 
-chrome.runtime.onStartup.addListener(updateTabCount); // Chrome起動時
-chrome.runtime.onInstalled.addListener(updateTabCount); // 拡張機能インストール時
-chrome.tabs.onCreated.addListener(updateTabCount); // 新しいタブが作成された時
-chrome.tabs.onRemoved.addListener(updateTabCount); // タブが閉じられた時
+/**
+ * タブ情報を全体的に更新するメイン関数
+ */
+async function mainUpdater() {
+  const count = await getTabCount();
+  updateBadge(count);
+  const dataToStore = await calculateNextStats(count);
+  await chrome.storage.local.set(dataToStore);
+}
+
+// イベントリスナーを設定
+chrome.runtime.onStartup.addListener(mainUpdater);
+chrome.runtime.onInstalled.addListener(mainUpdater);
+chrome.tabs.onCreated.addListener(mainUpdater);
+chrome.tabs.onRemoved.addListener(mainUpdater);

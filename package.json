@@ -1,0 +1,25 @@
+{
+  "name": "tab-counter",
+  "version": "1.0.0",
+  "description": "A Chrome extension that displays the number of open tabs.",
+  "main": "background.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "chrome-extension",
+    "tabs",
+    "counter"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "jest-chrome": "^0.8.0",
+    "jest-environment-jsdom": "^27.5.1"
+  }
+}
