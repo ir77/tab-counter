@@ -1,7 +1,25 @@
 body {
-  width: 200px;
-  text-align: center;
+  min-width: 220px;
+  padding: 16px;
+  margin: 0;
+  background-color: #fff;
+  font-family: "Helvetica Neue", Meiryo, sans-serif;
+  border-radius: 8px; /* 角丸 */
 }
+
 h1 {
-  font-size: 18px;
+  font-size: 16px;
+  margin: 0 0 12px;
+  color: #202124;
+}
+
+h2 {
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+  color: #5f6368;
+}
+
+#tabCount {
+  font-weight: bold;
 }
