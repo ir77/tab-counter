@@ -1,10 +1,14 @@
+html {
+  border-radius: 8px; /* 角丸 */
+  overflow: hidden;
+}
+
 body {
   min-width: 220px;
   padding: 16px;
   margin: 0;
   background-color: #fff;
   font-family: "Helvetica Neue", Meiryo, sans-serif;
-  border-radius: 8px; /* 角丸 */
 }
 
 h1 {
