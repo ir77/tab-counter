@@ -1,4 +1,3 @@
-import { getTabCount } from './common.js';
 import { STORAGE_KEYS } from './constants.js';
 
 /**
@@ -67,7 +66,7 @@ async function calculateNextStats(currentTabCount) {
  * タブ情報を全体的に更新するメイン関数
  */
 async function mainUpdater() {
-  const count = await getTabCount();
+  const count = await chrome.tabs.query({}).length;
   updateBadge(count);
   const dataToStore = await calculateNextStats(count);
   await chrome.storage.local.set(dataToStore);
