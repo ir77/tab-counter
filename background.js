@@ -1,56 +1,54 @@
-import { getTabCount } from './common.js';
-
-// タブの数を更新する非同期関数
-async function updateTabCount() {
-  const tabCount = await getTabCount();
-
-  // 拡張機能アイコンのバッジにタブ数を表示
-  chrome.action.setBadgeText({ text: tabCount.toString() });
-  // バッジの背景色を青に設定（オプション）
-  chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
-
-  // 今日の日付を YYYY-MM-DD 形式で取得
+// 毎日の統計を更新する
+async function updateDailyStats(currentTabCount) {
   const today = new Date().toLocaleDateString('sv-SE');
-  // ストレージから必要なデータを取得
   const { dailyStats, tabCount: lastStoredTabCount, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'tabCount', 'lastAvailablePreviousDayCount']);
 
   let todayStats;
-  let newPreviousDayCount = lastAvailablePreviousDayCount; // デフォルトで既存の値を引き継ぐ
+  let newPreviousDayCount = lastAvailablePreviousDayCount;
 
-  // 今日の日付と保存されている日付が違う、またはデータがない場合
   if (!dailyStats || dailyStats.date !== today) {
-    // dailyStatsが存在する場合（つまり、初回起動ではない新しい日）
     if (dailyStats) {
-      // 前日の最後のタブ数としてlastStoredTabCountを保存
       newPreviousDayCount = lastStoredTabCount;
     }
-    // 新しい統計データを作成
     todayStats = {
       date: today,
-      high: tabCount,
-      low: tabCount,
+      high: currentTabCount,
+      low: currentTabCount,
     };
   } else {
-    // 保存されているデータがあれば、最高値と最低値を更新
     todayStats = {
       ...dailyStats,
-      high: Math.max(dailyStats.high, tabCount),
-      low: Math.min(dailyStats.low, tabCount),
+      high: Math.max(dailyStats.high, currentTabCount),
+      low: Math.min(dailyStats.low, currentTabCount),
     };
   }
 
-  // ストレージに保存するデータを準備
   const dataToSet = {
-    tabCount: tabCount,
     dailyStats: todayStats
   };
 
-  // newPreviousDayCountがundefinedでない場合のみ保存
   if (newPreviousDayCount !== undefined) {
     dataToSet.lastAvailablePreviousDayCount = newPreviousDayCount;
   }
 
-  // ストレージにデータを保存
+  return dataToSet;
+}
+
+// タブの数を更新する非同期関数
+async function updateTabCount() {
+  const tabCount = await chrome.tabs.query({}).then(tabs => tabs.length);
+
+  // 拡張機能アイコンのバッジにタブ数を表示
+  chrome.action.setBadgeText({ text: tabCount.toString() });
+  chrome.action.setBadgeBackgroundColor({ color: '#4688F1' });
+
+  const statsData = await updateDailyStats(tabCount);
+
+  const dataToSet = {
+    tabCount: tabCount,
+    ...statsData
+  };
+
   await chrome.storage.local.set(dataToSet);
 }
 
