@@ -5,29 +5,40 @@ const lowCountElement = document.getElementById('lowCount');
 const previousDayContainer = document.getElementById('previousDayContainer');
 const previousDayLastCountElement = document.getElementById('previousDayLastCount');
 
+// ---- Helper Functions for UI Update ----
+
+function updateTabCountDisplay(count) {
+  tabCountElement.textContent = count !== undefined ? count : '...';
+}
+
+function updateDailyStatsDisplay(stats) {
+  if (stats) {
+    highCountElement.textContent = stats.high;
+    lowCountElement.textContent = stats.low;
+  } else {
+    highCountElement.textContent = '...';
+    lowCountElement.textContent = '...';
+  }
+}
+
+function updatePreviousDayDisplay(count) {
+  if (count !== undefined && count !== null) {
+    previousDayLastCountElement.textContent = count;
+    previousDayContainer.style.display = 'block';
+  } else {
+    previousDayContainer.style.display = 'none';
+  }
+}
+
+
+// ---- Main Logic ----
+
 // ストレージから値を読み込んで表示する関数
 function updateUI() {
   chrome.storage.local.get(['tabCount', 'dailyStats', 'lastAvailablePreviousDayCount'], (result) => {
-    // 現在のタブ数を表示
-    const count = result.tabCount !== undefined ? result.tabCount : '...';
-    tabCountElement.textContent = count;
-
-    // 今日の最高・最低タブ数を表示
-    if (result.dailyStats) {
-      highCountElement.textContent = result.dailyStats.high;
-      lowCountElement.textContent = result.dailyStats.low;
-    } else {
-      highCountElement.textContent = '...';
-      lowCountElement.textContent = '...';
-    }
-
-    // 前日の最後の値を表示（値がある場合のみ）
-    if (result.lastAvailablePreviousDayCount !== undefined && result.lastAvailablePreviousDayCount !== null) {
-      previousDayLastCountElement.textContent = result.lastAvailablePreviousDayCount;
-      previousDayContainer.style.display = 'block';
-    } else {
-      previousDayContainer.style.display = 'none';
-    }
+    updateTabCountDisplay(result.tabCount);
+    updateDailyStatsDisplay(result.dailyStats);
+    updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
   });
 }
 
@@ -38,20 +49,13 @@ updateUI();
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'local') {
     if (changes.tabCount) {
-      tabCountElement.textContent = changes.tabCount.newValue;
+      updateTabCountDisplay(changes.tabCount.newValue);
     }
     if (changes.dailyStats) {
-      highCountElement.textContent = changes.dailyStats.newValue.high;
-      lowCountElement.textContent = changes.dailyStats.newValue.low;
+      updateDailyStatsDisplay(changes.dailyStats.newValue);
     }
     if (changes.lastAvailablePreviousDayCount) {
-      const newValue = changes.lastAvailablePreviousDayCount.newValue;
-      if (newValue !== undefined && newValue !== null) {
-        previousDayLastCountElement.textContent = newValue;
-        previousDayContainer.style.display = 'block';
-      } else {
-        previousDayContainer.style.display = 'none';
-      }
+      updatePreviousDayDisplay(changes.lastAvailablePreviousDayCount.newValue);
     }
   }
 });
