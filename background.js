@@ -1,7 +1,8 @@
 // 毎日の統計を更新する
-async function updateDailyStats(currentTabCount) {
+async function updateDailyStats(
+  currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount
+) {
   const today = new Date().toLocaleDateString('sv-SE');
-  const { dailyStats, tabCount: lastStoredTabCount, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'tabCount', 'lastAvailablePreviousDayCount']);
 
   let todayStats;
   let newPreviousDayCount = lastAvailablePreviousDayCount;
@@ -60,8 +61,9 @@ function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount
 async function updateTabCount() {
   const tabCount = await chrome.tabs.query({}).then(tabs => tabs.length);
 
-  // 色決定に必要な情報を取得
-  const { dailyStats, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'lastAvailablePreviousDayCount']);
+  const { dailyStats } = await chrome.storage.local.get(['dailyStats']);
+  const { tabCount: lastStoredTabCount } = await chrome.storage.local.get(['tabCount']);
+  const { lastAvailablePreviousDayCount } = await chrome.storage.local.get(['lastAvailablePreviousDayCount']);
 
   // バッジの背景色を決定して設定
   const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
@@ -70,7 +72,9 @@ async function updateTabCount() {
   // 拡張機能アイコンのバッジにタブ数を表示
   chrome.action.setBadgeText({ text: tabCount.toString() });
 
-  const statsData = await updateDailyStats(tabCount);
+  const statsData = await updateDailyStats(
+    tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount
+  );
 
   const dataToSet = {
     tabCount: tabCount,
