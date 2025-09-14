@@ -1,5 +1,3 @@
-import { getTabCount } from './common.js';
-
 // 毎日の統計を更新する
 async function updateDailyStats(currentTabCount) {
   const today = new Date().toLocaleDateString('sv-SE');
@@ -38,7 +36,7 @@ async function updateDailyStats(currentTabCount) {
 
 // タブの数を更新する非同期関数
 async function updateTabCount() {
-  const tabCount = await getTabCount();
+  const tabCount = await chrome.tabs.query({}).then(tabs => tabs.length);
 
   // 拡張機能アイコンのバッジにタブ数を表示
   chrome.action.setBadgeText({ text: tabCount.toString() });
