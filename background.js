@@ -34,41 +34,41 @@ async function updateDailyStats(currentTabCount) {
   return dataToSet;
 }
 
+// バッジの背景色を決定する関数
+function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount) {
+  const today = new Date().toLocaleDateString('sv-SE');
+
+  // OR条件：いずれかを満たせば緑（良い状態）
+  // 1. 現在のタブ数が5以下
+  if (tabCount <= 5) {
+    return 'green';
+  }
+  // 2. 前日の最終タブ数以下
+  if (lastAvailablePreviousDayCount !== undefined && lastAvailablePreviousDayCount !== null && tabCount <= lastAvailablePreviousDayCount) {
+    return 'green';
+  }
+  // 3. 今日の最低タブ数以下
+  if (dailyStats && dailyStats.date === today && tabCount <= dailyStats.low) {
+    return 'green';
+  }
+
+  // どの条件も満たさない場合は赤（悪い状態）
+  return 'red';
+}
+
 // タブの数を更新する非同期関数
 async function updateTabCount() {
   const tabCount = await chrome.tabs.query({}).then(tabs => tabs.length);
 
+  // 色決定に必要な情報を取得
+  const { dailyStats, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'lastAvailablePreviousDayCount']);
+
+  // バッジの背景色を決定して設定
+  const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
+  chrome.action.setBadgeBackgroundColor({ color: color });
+
   // 拡張機能アイコンのバッジにタブ数を表示
   chrome.action.setBadgeText({ text: tabCount.toString() });
-
-  // --- バッジの背景色を決定するロジック ---
-  const { dailyStats, lastAvailablePreviousDayCount } = await chrome.storage.local.get(['dailyStats', 'lastAvailablePreviousDayCount']);
-  const today = new Date().toLocaleDateString('sv-SE');
-
-  // 条件をすべて満たしているかどうかのフラグ
-  let isGoodState = true;
-
-  // 条件1: 「現在のタブ数」が5以下である
-  if (tabCount > 5) {
-    isGoodState = false;
-  }
-
-  // 条件2: 「前日の最後の値」以下である
-  // Note: lastAvailablePreviousDayCount が未定義またはnullの場合は、この条件を無視します
-  if (lastAvailablePreviousDayCount !== undefined && lastAvailablePreviousDayCount !== null && tabCount > lastAvailablePreviousDayCount) {
-    isGoodState = false;
-  }
-
-  // 条件3: 「今日の最低値」を満たしている
-  // Note: 今日の統計がまだない場合（その日最初のタブ更新）、この条件は常に満たされます
-  if (dailyStats && dailyStats.date === today && tabCount > dailyStats.low) {
-    isGoodState = false;
-  }
-
-  // 条件に基づいて背景色を設定
-  const backgroundColor = isGoodState ? 'green' : 'red';
-  chrome.action.setBadgeBackgroundColor({ color: backgroundColor });
-  // --- ロジックここまで ---
 
   const statsData = await updateDailyStats(tabCount);
 
