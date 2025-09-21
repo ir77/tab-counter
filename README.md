@@ -37,6 +37,8 @@ deno task build
 ```
 
 ### TODO
+- [ ] add Type for popup.ts
+- [ ] add Type for background.ts
 - [ ] update background_test.ts
 - [ ] update popup_test.ts
 - [ ] add ui_test.ts
