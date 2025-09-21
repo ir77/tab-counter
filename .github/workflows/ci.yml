@@ -14,10 +14,20 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
+          deno-version: v2.4.x
           cache: true
 
-      - name: deno task check
-        run: deno task check
+      - name: Check formatting
+        run: deno fmt --check
+
+      - name: Lint code
+        run: deno lint
+
+      - name: Run tests
+        run: deno test
+
+      - name: Build
+        run: deno task build
 
       - name: Check for dist changes
         run: git diff --exit-code dist
