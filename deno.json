@@ -4,5 +4,11 @@
     "lint": "deno lint",
     "test": "deno test",
     "build": "deno run -A build.ts"
+  },
+  "fmt": {
+    "exclude": ["dist"]
+  },
+  "lint": {
+    "exclude": ["dist"]
   }
 }
