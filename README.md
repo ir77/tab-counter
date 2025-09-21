@@ -37,9 +37,30 @@ deno task build
 ```
 
 ### TODO
-- [ ] add Type for popup.ts
-- [ ] add Type for background.ts
-- [ ] update background_test.ts
-- [ ] update popup_test.ts
-- [ ] add ui_test.ts
-- [ ] add icon
+
+#### **型定義の強化 (Type Definition Enhancement)**
+
+- [ ] 共通の型定義ファイル `src/types.ts` を作成する (`DailyStats`,
+      `StorageData` 等)
+- [ ] `background.ts` に `src/types.ts` から型をインポートして適用する
+- [ ] `popup.ts` に `src/types.ts` から型をインポートして適用する
+
+#### **テストの拡充 (Test Expansion)**
+
+- [ ] **`background.ts` の単体テスト**
+  - [ ] `background_test.ts` のセットアップ (`chrome` API のモック)
+  - [ ] `updateDailyStats` 関数のテストケースを追加する
+  - [ ] `determineBadgeColor` 関数のテストケースを追加する
+- [ ] **`popup.ts` の単体テスト**
+  - [ ] `popup_test.ts` のセットアップ (DOM, `chrome.storage` API のモック)
+  - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
+- [ ] **E2E (UI) テスト**
+  - [ ] E2Eテストフレームワーク (Playwright等) の導入と設定
+  - [ ] ポップアップ表示を確認する基本的なUIテスト (`ui_test.ts`) を作成する
+
+#### **拡張機能アイコンの追加 (Add Extension Icon)**
+
+- [ ] `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
+      を追加する
+- [ ] `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
+- [ ] `manifest.json` を更新し、全サイズのアイコンパスを登録する
