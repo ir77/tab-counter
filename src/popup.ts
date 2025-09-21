@@ -1,3 +1,5 @@
+/// <reference types="npm:@types/chrome" />
+
 // UI要素を取得
 const tabCountElement = document.getElementById('tabCount');
 const highCountElement = document.getElementById('highCount');

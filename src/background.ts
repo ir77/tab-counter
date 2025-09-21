@@ -1,3 +1,5 @@
+/// <reference types="npm:@types/chrome" />
+
 // 毎日の統計を更新する
 async function updateDailyStats(
   currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount

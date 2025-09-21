@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Counter",
+  "version": "1.0",
+  "description": "現在開いているタブの数をアイコンに表示します。",
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Tab Counter",
+    "default_popup": "popup.html"
+  }
+}

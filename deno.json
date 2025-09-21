@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "fmt": "deno fmt",
+    "lint": "deno lint",
+    "test": "deno test",
+    "build": "deno run -A build.ts"
+  }
+}
