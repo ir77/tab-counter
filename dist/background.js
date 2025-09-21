@@ -1,5 +1,5 @@
-async function updateDailyStats(currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount) {
-    const today = new Date().toLocaleDateString('sv-SE');
+function updateDailyStats(currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount) {
+    const today = new Date().toLocaleDateString("sv-SE");
     let todayStats;
     let newPreviousDayCount = lastAvailablePreviousDayCount;
     if (!dailyStats || dailyStats.date !== today) {
@@ -27,28 +27,28 @@ async function updateDailyStats(currentTabCount, dailyStats, lastStoredTabCount,
     return dataToSet;
 }
 function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount) {
-    const today = new Date().toLocaleDateString('sv-SE');
+    const today = new Date().toLocaleDateString("sv-SE");
     if (tabCount <= 5) {
-        return 'green';
+        return "green";
     }
     if (lastAvailablePreviousDayCount !== undefined && lastAvailablePreviousDayCount !== null && tabCount <= lastAvailablePreviousDayCount) {
-        return 'green';
+        return "green";
     }
     if (dailyStats && dailyStats.date === today && tabCount <= dailyStats.low) {
-        return 'green';
+        return "green";
     }
-    return 'red';
+    return "red";
 }
 async function updateTabCount() {
     const tabCount = await chrome.tabs.query({}).then((tabs)=>tabs.length);
     const { dailyStats } = await chrome.storage.local.get([
-        'dailyStats'
+        "dailyStats"
     ]);
     const { tabCount: lastStoredTabCount } = await chrome.storage.local.get([
-        'tabCount'
+        "tabCount"
     ]);
     const { lastAvailablePreviousDayCount } = await chrome.storage.local.get([
-        'lastAvailablePreviousDayCount'
+        "lastAvailablePreviousDayCount"
     ]);
     const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
     chrome.action.setBadgeBackgroundColor({

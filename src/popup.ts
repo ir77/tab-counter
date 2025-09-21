@@ -1,16 +1,18 @@
 /// <reference types="npm:@types/chrome" />
 
 // UI要素を取得
-const tabCountElement = document.getElementById('tabCount');
-const highCountElement = document.getElementById('highCount');
-const lowCountElement = document.getElementById('lowCount');
-const previousDayContainer = document.getElementById('previousDayContainer');
-const previousDayLastCountElement = document.getElementById('previousDayLastCount');
+const tabCountElement = document.getElementById("tabCount");
+const highCountElement = document.getElementById("highCount");
+const lowCountElement = document.getElementById("lowCount");
+const previousDayContainer = document.getElementById("previousDayContainer");
+const previousDayLastCountElement = document.getElementById(
+  "previousDayLastCount",
+);
 
 // ---- Helper Functions for UI Update ----
 
 function updateTabCountDisplay(count) {
-  tabCountElement.textContent = count !== undefined ? count : '...';
+  tabCountElement.textContent = count !== undefined ? count : "...";
 }
 
 function updateDailyStatsDisplay(stats) {
@@ -18,26 +20,29 @@ function updateDailyStatsDisplay(stats) {
     highCountElement.textContent = stats.high;
     lowCountElement.textContent = stats.low;
   } else {
-    highCountElement.textContent = '...';
-    lowCountElement.textContent = '...';
+    highCountElement.textContent = "...";
+    lowCountElement.textContent = "...";
   }
 }
 
 function updatePreviousDayDisplay(count) {
   if (count !== undefined && count !== null) {
     previousDayLastCountElement.textContent = count;
-    previousDayContainer.style.display = 'block';
+    previousDayContainer.style.display = "block";
   } else {
-    previousDayContainer.style.display = 'none';
+    previousDayContainer.style.display = "none";
   }
 }
-
 
 // ---- Main Logic ----
 
 // ストレージから値を読み込んで表示する関数
 function updateUI() {
-  chrome.storage.local.get(['tabCount', 'dailyStats', 'lastAvailablePreviousDayCount'], (result) => {
+  chrome.storage.local.get([
+    "tabCount",
+    "dailyStats",
+    "lastAvailablePreviousDayCount",
+  ], (result) => {
     updateTabCountDisplay(result.tabCount);
     updateDailyStatsDisplay(result.dailyStats);
     updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
@@ -49,7 +54,7 @@ updateUI();
 
 // ストレージの値が変更されたときに表示を更新
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === 'local') {
+  if (namespace === "local") {
     if (changes.tabCount) {
       updateTabCountDisplay(changes.tabCount.newValue);
     }
