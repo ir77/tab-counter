@@ -10,5 +10,15 @@
   },
   "lint": {
     "exclude": ["dist"]
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["dom", "dom.iterable", "deno.window"],
+    "strict": true,
+    "types": ["npm:@types/chrome"]
+  },
+  "imports": {
+    "deno_emit": "https://deno.land/x/emit@0.40.0/mod.ts",
+    "std/": "https://deno.land/std@0.224.0/"
   }
 }
