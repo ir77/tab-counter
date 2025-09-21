@@ -35,3 +35,9 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 ```sh
 deno task build
 ```
+
+### TODO
+- [ ] update background_test.ts
+- [ ] update popup_test.ts
+- [ ] add ui_test.ts
+- [ ] add icon
