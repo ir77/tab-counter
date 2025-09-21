@@ -1,0 +1,23 @@
+name: Deno CI
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          cache: true
+
+      - name: deno task check
+        run: deno task check
+
+      - name: Check for dist changes
+        run: git diff --exit-code dist
