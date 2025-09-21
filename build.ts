@@ -1,6 +1,6 @@
-import { bundle } from "https://deno.land/x/emit@0.40.0/mod.ts";
-import { copy } from "https://deno.land/std@0.224.0/fs/copy.ts";
-import { emptyDir } from "https://deno.land/std@0.224.0/fs/empty_dir.ts";
+import { bundle } from "deno_emit";
+import { copy } from "std/fs/copy.ts";
+import { emptyDir } from "std/fs/empty_dir.ts";
 
 const outDir = "./dist";
 const srcDir = "./src";
