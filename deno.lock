@@ -7,7 +7,8 @@
     "jsr:@std/fmt@~0.218.2": "0.218.2",
     "jsr:@std/fs@~0.218.2": "0.218.2",
     "jsr:@std/io@~0.218.2": "0.218.2",
-    "jsr:@std/path@~0.218.2": "0.218.2"
+    "jsr:@std/path@~0.218.2": "0.218.2",
+    "npm:@types/chrome@*": "0.1.12"
   },
   "jsr": {
     "@deno/cache-dir@0.8.0": {
@@ -43,6 +44,27 @@
       "dependencies": [
         "jsr:@std/assert"
       ]
+    }
+  },
+  "npm": {
+    "@types/chrome@0.1.12": {
+      "integrity": "sha512-jEkxs9GPQHx7g49WjkA8QDNcqODbMGDuBbWQOtjiS/Wf9AiEcDmQMIAgJvC/Xi36WoCVNx584g0Dd9ThJQCAiw==",
+      "dependencies": [
+        "@types/filesystem",
+        "@types/har-format"
+      ]
+    },
+    "@types/filesystem@0.0.36": {
+      "integrity": "sha512-vPDXOZuannb9FZdxgHnqSwAG/jvdGM8Wq+6N4D/d80z+D4HWH+bItqsZaVRQykAn6WEVeEkLm2oQigyHtgb0RA==",
+      "dependencies": [
+        "@types/filewriter"
+      ]
+    },
+    "@types/filewriter@0.0.33": {
+      "integrity": "sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g=="
+    },
+    "@types/har-format@1.2.16": {
+      "integrity": "sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A=="
     }
   },
   "remote": {
