@@ -22,8 +22,17 @@ jobs:
           deno-version: v2.4.x
           cache: true
 
-      - name: Run deno task all
-        run: deno task all
+      - name: Run deno task fmt-ci
+        run: deno task fmt-ci
+
+      - name: Run deno task lint
+        run: deno task lint
+
+      - name: Run deno task test
+        run: deno task test
+
+      - name: Run deno task build
+        run: deno task build
 
       - name: Verify no diff
         run: |

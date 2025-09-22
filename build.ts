@@ -28,7 +28,10 @@ async function updateSrcManifestVersion() {
 }
 
 await emptyDir(outDir);
-await updateSrcManifestVersion();
+if (!Deno.env.get("CI")) {
+  await updateSrcManifestVersion();
+}
+
 await Promise.all([
   build("background.ts"),
   build("popup.ts"),
