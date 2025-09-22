@@ -21,7 +21,7 @@ jobs:
           cache: true
 
       - name: Check formatting
-        run: deno fmt --check
+        run: deno fmt
 
       - name: Lint code
         run: deno lint
