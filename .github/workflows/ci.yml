@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  check:
+  task-all:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,17 +22,8 @@ jobs:
           deno-version: v2.4.x
           cache: true
 
-      - name: Check formatting
-        run: deno fmt
-
-      - name: Lint code
-        run: deno lint
-
-      - name: Run tests
-        run: deno test
-
-      - name: Build
-        run: deno task build
+      - name: Run all tasks
+        run: deno task all
 
       - name: Commit changes
         run: |
