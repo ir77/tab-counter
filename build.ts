@@ -23,16 +23,13 @@ async function updateSrcManifestVersion() { // Renamed for clarity
   const manifest = JSON.parse(await Deno.readTextFile(manifestPath));
 
   const now = new Date();
-  const yyyy = now.getFullYear();
+  const yy = String(now.getFullYear()).slice(-2); // Get last two digits of year
   const mm = String(now.getMonth() + 1).padStart(2, "0");
   const dd = String(now.getDate()).padStart(2, "0");
   const hh = String(now.getHours()).padStart(2, "0");
   const mi = String(now.getMinutes()).padStart(2, "0");
-  const ss = String(now.getSeconds()).padStart(2, "0");
 
-  const baseVersion = manifest.version.split(".").slice(0, 2).join(".");
-  manifest.version = `${baseVersion}.${yyyy}${mm}${dd}${hh}${mi}${ss}`;
-
+  manifest.version = `1.${yy}.${mm}${dd}.${hh}${mi}`;
   await Deno.writeTextFile(manifestPath, JSON.stringify(manifest, null, 2));
 }
 
