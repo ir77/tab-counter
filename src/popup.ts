@@ -1,4 +1,5 @@
 /// <reference types="npm:@types/chrome" />
+import { DailyStats, StorageData } from "./types.ts";
 
 // UI要素を取得
 const tabCountElement = document.getElementById("tabCount");
@@ -11,23 +12,29 @@ const previousDayLastCountElement = document.getElementById(
 
 // ---- Helper Functions for UI Update ----
 
-function updateTabCountDisplay(count) {
-  tabCountElement.textContent = count !== undefined ? count : "...";
+function updateTabCountDisplay(count?: number) {
+  if (!tabCountElement) return;
+
+  tabCountElement.textContent = count !== undefined ? count.toString() : "...";
 }
 
-function updateDailyStatsDisplay(stats) {
+function updateDailyStatsDisplay(stats?: DailyStats) {
+  if (!highCountElement || !lowCountElement) return;
+
   if (stats) {
-    highCountElement.textContent = stats.high;
-    lowCountElement.textContent = stats.low;
+    highCountElement.textContent = stats.high.toString();
+    lowCountElement.textContent = stats.low.toString();
   } else {
     highCountElement.textContent = "...";
     lowCountElement.textContent = "...";
   }
 }
 
-function updatePreviousDayDisplay(count) {
+function updatePreviousDayDisplay(count?: number) {
+  if (!previousDayContainer || !previousDayLastCountElement) return;
+
   if (count !== undefined && count !== null) {
-    previousDayLastCountElement.textContent = count;
+    previousDayLastCountElement.textContent = count.toString();
     previousDayContainer.style.display = "block";
   } else {
     previousDayContainer.style.display = "none";
@@ -42,7 +49,7 @@ function updateUI() {
     "tabCount",
     "dailyStats",
     "lastAvailablePreviousDayCount",
-  ], (result) => {
+  ], (result: StorageData) => {
     updateTabCountDisplay(result.tabCount);
     updateDailyStatsDisplay(result.dailyStats);
     updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
@@ -53,16 +60,23 @@ function updateUI() {
 updateUI();
 
 // ストレージの値が変更されたときに表示を更新
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace === "local") {
-    if (changes.tabCount) {
-      updateTabCountDisplay(changes.tabCount.newValue);
+chrome.storage.onChanged.addListener(
+  (
+    changes: { [key: string]: chrome.storage.StorageChange },
+    namespace: string,
+  ) => {
+    if (namespace === "local") {
+      if (changes.tabCount) {
+        updateTabCountDisplay(changes.tabCount.newValue);
+      }
+      if (changes.dailyStats) {
+        updateDailyStatsDisplay(changes.dailyStats.newValue);
+      }
+      if (changes.lastAvailablePreviousDayCount) {
+        updatePreviousDayDisplay(
+          changes.lastAvailablePreviousDayCount.newValue,
+        );
+      }
     }
-    if (changes.dailyStats) {
-      updateDailyStatsDisplay(changes.dailyStats.newValue);
-    }
-    if (changes.lastAvailablePreviousDayCount) {
-      updatePreviousDayDisplay(changes.lastAvailablePreviousDayCount.newValue);
-    }
-  }
-});
+  },
+);

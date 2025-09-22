@@ -4,20 +4,23 @@ const lowCountElement = document.getElementById("lowCount");
 const previousDayContainer = document.getElementById("previousDayContainer");
 const previousDayLastCountElement = document.getElementById("previousDayLastCount");
 function updateTabCountDisplay(count) {
-    tabCountElement.textContent = count !== undefined ? count : "...";
+    if (!tabCountElement) return;
+    tabCountElement.textContent = count !== undefined ? count.toString() : "...";
 }
 function updateDailyStatsDisplay(stats) {
+    if (!highCountElement || !lowCountElement) return;
     if (stats) {
-        highCountElement.textContent = stats.high;
-        lowCountElement.textContent = stats.low;
+        highCountElement.textContent = stats.high.toString();
+        lowCountElement.textContent = stats.low.toString();
     } else {
         highCountElement.textContent = "...";
         lowCountElement.textContent = "...";
     }
 }
 function updatePreviousDayDisplay(count) {
+    if (!previousDayContainer || !previousDayLastCountElement) return;
     if (count !== undefined && count !== null) {
-        previousDayLastCountElement.textContent = count;
+        previousDayLastCountElement.textContent = count.toString();
         previousDayContainer.style.display = "block";
     } else {
         previousDayContainer.style.display = "none";

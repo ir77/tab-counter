@@ -38,13 +38,6 @@ deno task build
 
 ### TODO
 
-#### **型定義の強化 (Type Definition Enhancement)**
-
-- [x] 共通の型定義ファイル `src/types.ts` を作成する (`DailyStats`,
-      `StorageData` 等)
-- [x] `background.ts` に `src/types.ts` から型をインポートして適用する
-- [ ] `popup.ts` に `src/types.ts` から型をインポートして適用する
-
 #### **テストの拡充 (Test Expansion)**
 
 - [ ] **`background.ts` の単体テスト**
