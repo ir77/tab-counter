@@ -18,7 +18,26 @@ async function copyStaticFiles() {
   await copy(`${srcDir}/manifest.json`, `${outDir}/manifest.json`);
 }
 
+async function updateSrcManifestVersion() { // Renamed for clarity
+  const manifestPath = `${srcDir}/manifest.json`;
+  const manifest = JSON.parse(await Deno.readTextFile(manifestPath));
+
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mi = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+
+  const baseVersion = manifest.version.split(".").slice(0, 2).join(".");
+  manifest.version = `${baseVersion}.${yyyy}${mm}${dd}${hh}${mi}${ss}`;
+
+  await Deno.writeTextFile(manifestPath, JSON.stringify(manifest, null, 2));
+}
+
 await emptyDir(outDir);
+await updateSrcManifestVersion();
 await Promise.all([
   build("background.ts"),
   build("popup.ts"),
