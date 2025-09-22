@@ -5,7 +5,7 @@
     "lint": "deno lint",
     "test": "deno test",
     "build": "deno run -A build.ts",
-    "all": "deno task fmt && deno task lint && deno task test && deno task build"
+    "all": " deno task build && deno task fmt && deno task lint && deno task test"
   },
   "fmt": {
     "exclude": ["dist"]
