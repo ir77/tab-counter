@@ -25,6 +25,6 @@ jobs:
       - name: Run deno task all
         run: deno task all
 
-      - name: Verify no diff on main branch push
+      - name: Verify no diff
         run: |
           git diff --exit-code
