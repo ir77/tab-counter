@@ -30,7 +30,7 @@ async function updateSrcManifestVersion() {
     minute: "2-digit",
     hour12: false,
     timeZone: "Asia/Tokyo",
-  };
+  } as const;
 
   const formatter = new Intl.DateTimeFormat("ja-JP", options);
   const now = new Date();
