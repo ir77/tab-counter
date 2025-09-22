@@ -1,6 +1,7 @@
 import { bundle } from "deno_emit";
 import { copy } from "std/fs/copy.ts";
 import { emptyDir } from "std/fs/empty_dir.ts";
+import { format } from "std/datetime/format.ts";
 
 const outDir = "./dist";
 const srcDir = "./src";
@@ -22,28 +23,7 @@ async function updateSrcManifestVersion() {
   const manifestPath = `${srcDir}/manifest.json`;
   const manifest = JSON.parse(await Deno.readTextFile(manifestPath));
 
-  const options = {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "Asia/Tokyo",
-  } as const;
-
-  const formatter = new Intl.DateTimeFormat("ja-JP", options);
-  const now = new Date();
-  const partsMap = new Map(
-    formatter.formatToParts(now).map(({ type, value }) => [type, value]),
-  );
-
-  const yy = partsMap.get("year");
-  const MM = partsMap.get("month");
-  const dd = partsMap.get("day");
-  const HH = partsMap.get("hour");
-  const mm = partsMap.get("minute");
-  manifest.version = `1.${yy}.${MM}${dd}.${HH}${mm}`;
+  manifest.version = `1.${format(new Date(), "yy.MMdd.HHmm")}`;
   await Deno.writeTextFile(manifestPath, JSON.stringify(manifest, null, 2));
 }
 
