@@ -1,4 +1,4 @@
-function updateDailyStats(currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount) {
+function calculateUpdatedStats(currentTabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount) {
     const today = new Date().toLocaleDateString("sv-SE");
     let todayStats;
     let newPreviousDayCount = lastAvailablePreviousDayCount;
@@ -18,13 +18,10 @@ function updateDailyStats(currentTabCount, dailyStats, lastStoredTabCount, lastA
             low: Math.min(dailyStats.low, currentTabCount)
         };
     }
-    const dataToSet = {
-        dailyStats: todayStats
+    return {
+        todayStats,
+        newPreviousDayCount
     };
-    if (newPreviousDayCount !== undefined) {
-        dataToSet.lastAvailablePreviousDayCount = newPreviousDayCount;
-    }
-    return dataToSet;
 }
 function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount) {
     const today = new Date().toLocaleDateString("sv-SE");
@@ -41,13 +38,9 @@ function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount
 }
 async function updateTabCount() {
     const tabCount = await chrome.tabs.query({}).then((tabs)=>tabs.length);
-    const { dailyStats } = await chrome.storage.local.get([
-        "dailyStats"
-    ]);
-    const { tabCount: lastStoredTabCount } = await chrome.storage.local.get([
-        "tabCount"
-    ]);
-    const { lastAvailablePreviousDayCount } = await chrome.storage.local.get([
+    const { dailyStats, tabCount: lastStoredTabCount, lastAvailablePreviousDayCount } = await chrome.storage.local.get([
+        "dailyStats",
+        "tabCount",
         "lastAvailablePreviousDayCount"
     ]);
     const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
@@ -57,10 +50,11 @@ async function updateTabCount() {
     chrome.action.setBadgeText({
         text: tabCount.toString()
     });
-    const statsData = await updateDailyStats(tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount);
+    const { todayStats, newPreviousDayCount } = calculateUpdatedStats(tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount);
     const dataToSet = {
         tabCount: tabCount,
-        ...statsData
+        dailyStats: todayStats,
+        lastAvailablePreviousDayCount: newPreviousDayCount
     };
     await chrome.storage.local.set(dataToSet);
 }
