@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 質問やディスカッション
+    url: https://github.com/ir77/tab-counter/discussions
+    about: 機能の使い方や開発に関する質問はこちら
+  - name: 📖 開発ドキュメント
+    url: https://github.com/ir77/tab-counter/blob/main/README.md
+    about: プロジェクトの概要や開発方法について

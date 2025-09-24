@@ -36,24 +36,26 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 deno task build
 ```
 
-### TODO
+### 開発課題
 
-#### **テストの拡充 (Test Expansion)**
+このプロジェクトの開発課題は GitHub Issues で管理されています。新しい課題や機能要望がある場合は、以下のテンプレートを使用して Issue を作成してください。
 
-- [ ] **`background.ts` の単体テスト**
-  - [ ] `background_test.ts` のセットアップ (`chrome` API のモック)
-  - [ ] `updateDailyStats` 関数のテストケースを追加する
-  - [ ] `determineBadgeColor` 関数のテストケースを追加する
-- [ ] **`popup.ts` の単体テスト**
-  - [ ] `popup_test.ts` のセットアップ (DOM, `chrome.storage` API のモック)
-  - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
-- [ ] **E2E (UI) テスト**
-  - [ ] E2Eテストフレームワーク (Playwright等) の導入と設定
-  - [ ] ポップアップ表示を確認する基本的なUIテスト (`ui_test.ts`) を作成する
+#### 主要な開発課題
 
-#### **拡張機能アイコンの追加 (Add Extension Icon)**
+**テスト関連**
+- [テストの拡充 (Test Expansion)](.github/ISSUE_TEMPLATE/test-expansion.md) - 単体テストとE2Eテストの実装
+  - [background.ts の単体テスト](.github/ISSUE_TEMPLATE/background-unit-test.md)
+  - [popup.ts の単体テスト](.github/ISSUE_TEMPLATE/popup-unit-test.md)
+  - [E2E (UI) テスト](.github/ISSUE_TEMPLATE/e2e-ui-test.md)
 
-- [ ] `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
-      を追加する
-- [ ] `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
-- [ ] `manifest.json` を更新し、全サイズのアイコンパスを登録する
+**UI/UX改善**
+- [拡張機能アイコンの追加 (Add Extension Icon)](.github/ISSUE_TEMPLATE/add-extension-icon.md) - アイコンファイルの作成と設定
+  - [アイコンファイルの作成](.github/ISSUE_TEMPLATE/create-icon-files.md)
+  - [manifest.json の更新（アイコン設定）](.github/ISSUE_TEMPLATE/update-manifest-json.md)
+
+#### Issue の作成方法
+
+1. [Issues ページ](https://github.com/ir77/tab-counter/issues) にアクセス
+2. "New issue" をクリック
+3. 適切なテンプレートを選択
+4. 必要な情報を入力して作成
