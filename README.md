@@ -36,47 +36,6 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 deno task build
 ```
 
-### テスト
-
-テストの実行:
-
-```sh
-deno task test
-```
-
-### カバレッジ測定
-
-コードカバレッジを測定して品質を確認できます。目標値は **80%以上** に設定されています。
-
-#### 手動でのカバレッジ測定
-
-```sh
-# テストをカバレッジ測定付きで実行
-deno task test:cov
-
-# カバレッジレポートをコンソールに表示
-deno task coverage
-
-# HTMLレポートを生成（coverage/html/index.html）
-deno task coverage:html
-
-# LCOVファイルを生成（coverage/lcov.info）
-deno task coverage:lcov
-```
-
-#### CI連携
-
-GitHub ActionsでCIを実行する際に、カバレッジが自動的に測定されます：
-
-- テスト実行時にカバレッジデータを収集
-- カバレッジレポートの生成
-- 80%未満の場合はCIが失敗
-
-#### 公式ドキュメント
-
-- [Deno Coverage コマンド公式ドキュメント](https://docs.deno.com/runtime/reference/cli/coverage/)
-- [Deno Test コマンド公式ドキュメント](https://docs.deno.com/runtime/reference/cli/test/)
-
 ### TODO
 
 #### **テストの拡充 (Test Expansion)**
