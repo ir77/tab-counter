@@ -12,7 +12,7 @@
     "all": "deno task build && deno task fmt && deno task lint && deno task test"
   },
   "fmt": {
-    "exclude": ["dist"]
+    "exclude": ["dist", "*.md"]
   },
   "lint": {
     "exclude": ["dist"]
