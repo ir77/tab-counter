@@ -31,5 +31,28 @@ jobs:
       - name: Run deno task lint
         run: deno task lint
 
-      - name: Run deno task test
-        run: deno task test
+      - name: Run tests with coverage
+        run: deno task test:cov
+
+      - name: Generate coverage report
+        run: deno task coverage
+
+      - name: Check coverage threshold (80%)
+        run: |
+          COVERAGE_OUTPUT=$(deno task coverage)
+          echo "$COVERAGE_OUTPUT"
+          COVERAGE=$(echo "$COVERAGE_OUTPUT" | grep "All files" | sed 's/|//g' | awk '{print $NF}')
+          echo "Extracted Coverage: ${COVERAGE}%"
+          deno eval "
+            const coverage = parseFloat('${COVERAGE}');
+            if (isNaN(coverage)) {
+              console.error('ERROR: Could not parse coverage value');
+              Deno.exit(1);
+            }
+            if (coverage < 80) {
+              console.error(\`ERROR: Coverage \${coverage}% is below the required 80% threshold\`);
+              Deno.exit(1);
+            } else {
+              console.log(\`SUCCESS: Coverage \${coverage}% meets the 80% threshold\`);
+            }
+          "
