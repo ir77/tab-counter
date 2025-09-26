@@ -36,6 +36,28 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 deno task build
 ```
 
+### 開発者向け情報
+
+#### Copilot Instructions
+このプロジェクトでは、GitHub Copilot coding agentが効果的に動作するための指示書を用意しています：
+
+- `.github/copilot-instructions.md`: GitHub Copilot coding agent向けの詳細な指示
+- `AGENTS.md`: エージェント全般向けの日本語での指示書
+
+これらのファイルには、プロジェクトの技術スタック、開発ガイドライン、コーディング規約が記載されています。
+
+#### 開発コマンド
+```sh
+# 全てのタスクを実行（ビルド・フォーマット・リント・テスト）
+deno task all
+
+# 個別実行
+deno task build  # ビルド
+deno task test   # テスト実行
+deno task lint   # リント
+deno task fmt    # コードフォーマット
+```
+
 ### TODO
 
 #### **テストの拡充 (Test Expansion)**
