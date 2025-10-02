@@ -1,10 +1,8 @@
 /// <reference types="npm:@types/chrome" />
 
 import type { StorageData } from "./domain/types.ts";
-import {
-  calculateUpdatedStats,
-  determineBadgeColor,
-} from "./domain/tab_stats.ts";
+import { calculateUpdatedStats } from "./domain/stats_calculator.ts";
+import { determineBadgeColor } from "./domain/badge_color.ts";
 
 // タブの数を更新する非同期関数
 async function updateTabCount(): Promise<void> {
