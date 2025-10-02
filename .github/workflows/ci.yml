@@ -39,7 +39,6 @@ jobs:
           COVERAGE_OUTPUT=$(deno task coverage)
           echo "$COVERAGE_OUTPUT"
           COVERAGE=$(echo "$COVERAGE_OUTPUT" | grep "All files" | sed 's/|//g' | awk '{print $NF}')
-          echo "Extracted Coverage: ${COVERAGE}%"
           deno eval "
             const coverage = parseFloat('${COVERAGE}');
             if (isNaN(coverage)) {
