@@ -34,9 +34,6 @@ jobs:
       - name: Run tests with coverage
         run: deno task test:cov
 
-      - name: Generate coverage report
-        run: deno task coverage
-
       - name: Check coverage threshold (80%)
         run: |
           COVERAGE_OUTPUT=$(deno task coverage)

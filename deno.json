@@ -5,8 +5,6 @@
     "lint": "deno lint",
     "test:cov": "deno test --coverage=coverage",
     "coverage": "deno coverage coverage",
-    "coverage:html": "deno coverage coverage --html",
-    "coverage:lcov": "deno coverage coverage --lcov --output=coverage/lcov.info",
     "build": "deno run -A build.ts",
     "all": "deno task build && deno task fmt && deno task lint && deno task test:cov"
   },
