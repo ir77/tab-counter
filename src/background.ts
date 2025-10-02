@@ -1,68 +1,10 @@
 /// <reference types="npm:@types/chrome" />
 
-import type { DailyStats, StorageData } from "./types.ts";
-
-// 新しい統計情報を計算する
-function calculateUpdatedStats(
-  currentTabCount: number,
-  dailyStats: DailyStats | undefined,
-  lastStoredTabCount: number | undefined,
-  lastAvailablePreviousDayCount: number | undefined,
-): { todayStats: DailyStats; newPreviousDayCount: number | undefined } {
-  const today = new Date().toLocaleDateString("sv-SE");
-
-  let todayStats: DailyStats;
-  let newPreviousDayCount: number | undefined = lastAvailablePreviousDayCount;
-
-  if (!dailyStats || dailyStats.date !== today) {
-    if (dailyStats) {
-      newPreviousDayCount = lastStoredTabCount;
-    }
-    todayStats = {
-      date: today,
-      high: currentTabCount,
-      low: currentTabCount,
-    };
-  } else {
-    todayStats = {
-      ...dailyStats,
-      high: Math.max(dailyStats.high, currentTabCount),
-      low: Math.min(dailyStats.low, currentTabCount),
-    };
-  }
-
-  return { todayStats, newPreviousDayCount };
-}
-
-// バッジの背景色を決定する関数
-function determineBadgeColor(
-  tabCount: number,
-  dailyStats: DailyStats | undefined,
-  lastAvailablePreviousDayCount: number | undefined,
-): "green" | "red" {
-  const today = new Date().toLocaleDateString("sv-SE");
-
-  // OR条件：いずれかを満たせば緑（良い状態）
-  // 1. 現在のタブ数が5以下
-  if (tabCount <= 5) {
-    return "green";
-  }
-  // 2. 前日の最終タブ数以下
-  if (
-    lastAvailablePreviousDayCount !== undefined &&
-    lastAvailablePreviousDayCount !== null &&
-    tabCount <= lastAvailablePreviousDayCount
-  ) {
-    return "green";
-  }
-  // 3. 今日の最低タブ数以下
-  if (dailyStats && dailyStats.date === today && tabCount <= dailyStats.low) {
-    return "green";
-  }
-
-  // どの条件も満たさない場合は赤（悪い状態）
-  return "red";
-}
+import type { StorageData } from "./domain/types.ts";
+import {
+  calculateUpdatedStats,
+  determineBadgeColor,
+} from "./domain/tab_stats.ts";
 
 // タブの数を更新する非同期関数
 async function updateTabCount(): Promise<void> {
@@ -78,6 +20,9 @@ async function updateTabCount(): Promise<void> {
     "lastAvailablePreviousDayCount",
   ]);
 
+  // 拡張機能アイコンのバッジにタブ数を表示
+  chrome.action.setBadgeText({ text: tabCount.toString() });
+
   // バッジの背景色を決定して設定
   const color = determineBadgeColor(
     tabCount,
@@ -85,9 +30,6 @@ async function updateTabCount(): Promise<void> {
     lastAvailablePreviousDayCount,
   );
   chrome.action.setBadgeBackgroundColor({ color: color });
-
-  // 拡張機能アイコンのバッジにタブ数を表示
-  chrome.action.setBadgeText({ text: tabCount.toString() });
 
   const { todayStats, newPreviousDayCount } = calculateUpdatedStats(
     tabCount,

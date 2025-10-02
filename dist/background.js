@@ -43,12 +43,12 @@ async function updateTabCount() {
         "tabCount",
         "lastAvailablePreviousDayCount"
     ]);
+    chrome.action.setBadgeText({
+        text: tabCount.toString()
+    });
     const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
     chrome.action.setBadgeBackgroundColor({
         color: color
-    });
-    chrome.action.setBadgeText({
-        text: tabCount.toString()
     });
     const { todayStats, newPreviousDayCount } = calculateUpdatedStats(tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount);
     const dataToSet = {
