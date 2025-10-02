@@ -19,8 +19,9 @@ function calculateUpdatedStats(currentTabCount, dailyStats, lastStoredTabCount, 
         };
     }
     return {
-        todayStats,
-        newPreviousDayCount
+        tabCount: currentTabCount,
+        dailyStats: todayStats,
+        lastAvailablePreviousDayCount: newPreviousDayCount
     };
 }
 function determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount) {
@@ -43,20 +44,15 @@ async function updateTabCount() {
         "tabCount",
         "lastAvailablePreviousDayCount"
     ]);
+    chrome.action.setBadgeText({
+        text: tabCount.toString()
+    });
     const color = determineBadgeColor(tabCount, dailyStats, lastAvailablePreviousDayCount);
     chrome.action.setBadgeBackgroundColor({
         color: color
     });
-    chrome.action.setBadgeText({
-        text: tabCount.toString()
-    });
-    const { todayStats, newPreviousDayCount } = calculateUpdatedStats(tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount);
-    const dataToSet = {
-        tabCount: tabCount,
-        dailyStats: todayStats,
-        lastAvailablePreviousDayCount: newPreviousDayCount
-    };
-    await chrome.storage.local.set(dataToSet);
+    const updatedStorageData = calculateUpdatedStats(tabCount, dailyStats, lastStoredTabCount, lastAvailablePreviousDayCount);
+    await chrome.storage.local.set(updatedStorageData);
 }
 chrome.runtime.onStartup.addListener(updateTabCount);
 chrome.runtime.onInstalled.addListener(updateTabCount);

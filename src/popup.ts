@@ -1,5 +1,5 @@
 /// <reference types="npm:@types/chrome" />
-import { DailyStats, StorageData } from "./types.ts";
+import { DailyStats, StorageData } from "./domain/types.ts";
 
 // UI要素を取得
 const tabCountElement = document.getElementById("tabCount");
