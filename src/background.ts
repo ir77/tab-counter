@@ -20,10 +20,8 @@ async function updateTabCount(): Promise<void> {
     "lastAvailablePreviousDayCount",
   ]);
 
-  // 拡張機能アイコンのバッジにタブ数を表示
   chrome.action.setBadgeText({ text: tabCount.toString() });
 
-  // バッジの背景色を決定して設定
   const color = determineBadgeColor(
     tabCount,
     dailyStats,
@@ -31,20 +29,13 @@ async function updateTabCount(): Promise<void> {
   );
   chrome.action.setBadgeBackgroundColor({ color: color });
 
-  const { todayStats, newPreviousDayCount } = calculateUpdatedStats(
+  const updatedStorageData: StorageData = calculateUpdatedStats(
     tabCount,
     dailyStats,
     lastStoredTabCount,
     lastAvailablePreviousDayCount,
   );
-
-  const dataToSet: StorageData = {
-    tabCount: tabCount,
-    dailyStats: todayStats,
-    lastAvailablePreviousDayCount: newPreviousDayCount,
-  };
-
-  await chrome.storage.local.set(dataToSet);
+  await chrome.storage.local.set(updatedStorageData);
 }
 
 chrome.runtime.onStartup.addListener(updateTabCount); // Chrome起動時

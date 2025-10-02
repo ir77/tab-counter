@@ -31,12 +31,13 @@ Deno.test("calculateUpdatedStats initializes stats for new day when none stored"
   withFixedDate("2025-10-02T09:00:00Z", () => {
     const result = calculateUpdatedStats(7, undefined, undefined, undefined);
 
-    assertEquals(result.todayStats, {
+    assertEquals(result.dailyStats, {
       date: new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE"),
       high: 7,
       low: 7,
     });
-    assertStrictEquals(result.newPreviousDayCount, undefined);
+    assertStrictEquals(result.tabCount, 7);
+    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
   });
 });
 
@@ -50,12 +51,13 @@ Deno.test("calculateUpdatedStats carries over previous day count when date advan
 
     const result = calculateUpdatedStats(4, previousDayStats, 9, undefined);
 
-    assertEquals(result.todayStats, {
+    assertEquals(result.dailyStats, {
       date: new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE"),
       high: 4,
       low: 4,
     });
-    assertStrictEquals(result.newPreviousDayCount, 9);
+    assertStrictEquals(result.tabCount, 4);
+    assertStrictEquals(result.lastAvailablePreviousDayCount, 9);
   });
 });
 
@@ -70,12 +72,13 @@ Deno.test("calculateUpdatedStats updates high and low within same day", () => {
 
     const result = calculateUpdatedStats(8, existingStats, 6, undefined);
 
-    assertEquals(result.todayStats, {
+    assertEquals(result.dailyStats, {
       date: today,
       high: 8,
       low: 2,
     });
-    assertStrictEquals(result.newPreviousDayCount, undefined);
+    assertStrictEquals(result.tabCount, 8);
+    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
   });
 });
 

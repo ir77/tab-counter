@@ -1,16 +1,11 @@
-import type { DailyStats } from "./types.ts";
-
-export interface UpdatedStatsResult {
-  todayStats: DailyStats;
-  newPreviousDayCount: number | undefined;
-}
+import type { DailyStats, StorageData } from "./types.ts";
 
 export function calculateUpdatedStats(
   currentTabCount: number,
   dailyStats: DailyStats | undefined,
   lastStoredTabCount: number | undefined,
   lastAvailablePreviousDayCount: number | undefined,
-): UpdatedStatsResult {
+): StorageData {
   const today = new Date().toLocaleDateString("sv-SE");
 
   let todayStats: DailyStats;
@@ -33,7 +28,11 @@ export function calculateUpdatedStats(
     };
   }
 
-  return { todayStats, newPreviousDayCount };
+  return {
+    tabCount: currentTabCount,
+    dailyStats: todayStats,
+    lastAvailablePreviousDayCount: newPreviousDayCount,
+  };
 }
 
 export function determineBadgeColor(

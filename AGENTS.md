@@ -18,9 +18,7 @@ Tab CounterはChrome拡張機能で、現在開いているタブ数を表示・
 - Chrome APIのモックを適切に使用してテストを作成してください
 
 ### ビルドとリント
-- 変更後は必ずリントとフォーマットを実行: `deno task lint && deno task fmt`
-- ビルドコマンド: `deno task build`
-- 全てのチェック: `deno task all`
+- 変更後は必ずリントとフォーマット、ビルド、テストを実行: `deno task all`
 
 ### 質問
 - 不明な点や判断に迷うことがあれば、遠慮なく質問してください
