@@ -3,9 +3,10 @@
     "fmt": "deno fmt",
     "fmt-ci": "deno fmt --check",
     "lint": "deno lint",
-    "test": "deno test",
+    "test:cov": "deno test --coverage=coverage",
+    "coverage": "deno coverage coverage",
     "build": "deno run -A build.ts",
-    "all": "deno task build && deno task fmt && deno task lint && deno task test"
+    "all": "deno task build && deno task fmt && deno task lint && deno task test:cov"
   },
   "fmt": {
     "exclude": ["dist", "*.md"]
