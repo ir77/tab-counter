@@ -1,5 +1,9 @@
 import type { DailyStats, StorageData } from "./types.ts";
 
+/**
+ * 現在のタブ数と既存の統計情報を基に日次統計を更新します。
+ * 前日のタブ数を必要に応じて繰り越し、保存用データを返します。
+ */
 export function calculateUpdatedStats(
   currentTabCount: number,
   dailyStats: DailyStats | undefined,
@@ -35,6 +39,10 @@ export function calculateUpdatedStats(
   };
 }
 
+/**
+ * タブ数の状況からバッジの色を判断します。
+ * 閾値を下回る場合は緑色とし、それ以外は赤色を返します。
+ */
 export function determineBadgeColor(
   tabCount: number,
   dailyStats: DailyStats | undefined,

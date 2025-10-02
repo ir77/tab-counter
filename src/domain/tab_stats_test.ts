@@ -27,89 +27,149 @@ function withFixedDate<T>(isoDate: string, fn: () => T): T {
   }
 }
 
-Deno.test("calculateUpdatedStats initializes stats for new day when none stored", () => {
+Deno.test("calculateUpdatedStatsは保存済み統計がない日に当日の統計を初期化する", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
-    const result = calculateUpdatedStats(7, undefined, undefined, undefined);
+    // Arrange
+    const currentTabCount = 7;
+    const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
 
+    // Act
+    const result = calculateUpdatedStats(
+      currentTabCount,
+      undefined,
+      undefined,
+      undefined,
+    );
+
+    // Assert
     assertEquals(result.dailyStats, {
-      date: new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE"),
-      high: 7,
-      low: 7,
+      date: today,
+      high: currentTabCount,
+      low: currentTabCount,
     });
-    assertStrictEquals(result.tabCount, 7);
+    assertStrictEquals(result.tabCount, currentTabCount);
     assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
   });
 });
 
-Deno.test("calculateUpdatedStats carries over previous day count when date advances", () => {
+Deno.test("calculateUpdatedStatsは日付が進んだ際に前日のタブ数を繰り越す", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
     const previousDayStats: DailyStats = {
       date: "2025-10-01",
       high: 12,
       low: 3,
     };
+    const currentTabCount = 4;
+    const lastStoredTabCount = 9;
+    const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
 
-    const result = calculateUpdatedStats(4, previousDayStats, 9, undefined);
+    // Act
+    const result = calculateUpdatedStats(
+      currentTabCount,
+      previousDayStats,
+      lastStoredTabCount,
+      undefined,
+    );
 
+    // Assert
     assertEquals(result.dailyStats, {
-      date: new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE"),
-      high: 4,
-      low: 4,
+      date: today,
+      high: currentTabCount,
+      low: currentTabCount,
     });
-    assertStrictEquals(result.tabCount, 4);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, 9);
+    assertStrictEquals(result.tabCount, currentTabCount);
+    assertStrictEquals(
+      result.lastAvailablePreviousDayCount,
+      lastStoredTabCount,
+    );
   });
 });
 
-Deno.test("calculateUpdatedStats updates high and low within same day", () => {
+Deno.test("calculateUpdatedStatsは同日の高値と安値を更新する", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
     const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
     const existingStats: DailyStats = {
       date: today,
       high: 6,
       low: 2,
     };
+    const currentTabCount = 8;
 
-    const result = calculateUpdatedStats(8, existingStats, 6, undefined);
+    // Act
+    const result = calculateUpdatedStats(
+      currentTabCount,
+      existingStats,
+      6,
+      undefined,
+    );
 
+    // Assert
     assertEquals(result.dailyStats, {
       date: today,
-      high: 8,
-      low: 2,
+      high: currentTabCount,
+      low: existingStats.low,
     });
-    assertStrictEquals(result.tabCount, 8);
+    assertStrictEquals(result.tabCount, currentTabCount);
     assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
   });
 });
 
-Deno.test("determineBadgeColor returns green for low tab count", () => {
+Deno.test("determineBadgeColorはタブ数が少ない場合に緑を返す", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
-    const color = determineBadgeColor(4, undefined, undefined);
+    // Arrange
+    const tabCount = 4;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, undefined);
+
+    // Assert
     assertStrictEquals(color, "green");
   });
 });
 
-Deno.test("determineBadgeColor prefers previous day baseline", () => {
+Deno.test("determineBadgeColorは前日基準を優先して緑を返す", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
-    const color = determineBadgeColor(7, undefined, 8);
+    // Arrange
+    const tabCount = 7;
+    const previousDayLow = 8;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, previousDayLow);
+
+    // Assert
     assertStrictEquals(color, "green");
   });
 });
 
-Deno.test("determineBadgeColor uses daily low threshold", () => {
+Deno.test("determineBadgeColorは当日の最小値を閾値として緑を返す", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
     const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
     const stats: DailyStats = { date: today, high: 10, low: 6 };
-    const color = determineBadgeColor(6, stats, undefined);
+    const tabCount = 6;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, undefined);
+
+    // Assert
     assertStrictEquals(color, "green");
   });
 });
 
-Deno.test("determineBadgeColor falls back to red when thresholds exceeded", () => {
+Deno.test("determineBadgeColorは閾値を超えると赤を返す", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
     const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
     const stats: DailyStats = { date: today, high: 10, low: 6 };
-    const color = determineBadgeColor(9, stats, 8);
+    const tabCount = 9;
+    const previousDayLow = 8;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, previousDayLow);
+
+    // Assert
     assertStrictEquals(color, "red");
   });
 });
