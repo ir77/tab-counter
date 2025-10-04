@@ -84,3 +84,145 @@ Deno.test("determineBadgeColorは閾値を超えると赤を返す", () => {
     assertStrictEquals(color, "red");
   });
 });
+
+Deno.test("determineBadgeColorは境界値5で緑を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 5;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, undefined);
+
+    // Assert
+    assertStrictEquals(color, "green");
+  });
+});
+
+Deno.test("determineBadgeColorは基本閾値を超えると赤を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 6;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, undefined);
+
+    // Assert
+    assertStrictEquals(color, "red");
+  });
+});
+
+Deno.test("determineBadgeColorは前日基準と同じ値で緑を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 10;
+    const previousDayLow = 10;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, previousDayLow);
+
+    // Assert
+    assertStrictEquals(color, "green");
+  });
+});
+
+Deno.test("determineBadgeColorは前日基準を超えると赤を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 11;
+    const previousDayLow = 10;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, previousDayLow);
+
+    // Assert
+    assertStrictEquals(color, "red");
+  });
+});
+
+Deno.test("determineBadgeColorは当日の最小値を超えると赤を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
+    const stats: DailyStats = { date: today, high: 10, low: 6 };
+    const tabCount = 7;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, undefined);
+
+    // Assert
+    assertStrictEquals(color, "red");
+  });
+});
+
+Deno.test("determineBadgeColorは日付が異なる統計を無視して赤を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const stats: DailyStats = { date: "2025-10-01", high: 10, low: 6 };
+    const tabCount = 6;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, undefined);
+
+    // Assert
+    assertStrictEquals(color, "red");
+  });
+});
+
+Deno.test("determineBadgeColorはlastAvailablePreviousDayCountがnullの場合は無視する", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 6;
+    const previousDayLow = null as unknown as number | undefined;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, previousDayLow);
+
+    // Assert
+    assertStrictEquals(color, "red");
+  });
+});
+
+Deno.test("determineBadgeColorはタブ数が0の場合に緑を返す", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const tabCount = 0;
+
+    // Act
+    const color = determineBadgeColor(tabCount, undefined, undefined);
+
+    // Assert
+    assertStrictEquals(color, "green");
+  });
+});
+
+Deno.test("determineBadgeColorは複数条件で基本閾値が最優先される", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
+    const stats: DailyStats = { date: today, high: 20, low: 15 };
+    const tabCount = 5;
+    const previousDayLow = 4;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, previousDayLow);
+
+    // Assert
+    assertStrictEquals(color, "green");
+  });
+});
+
+Deno.test("determineBadgeColorは前日基準が当日統計より優先される", () => {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
+    // Arrange
+    const today = new Date("2025-10-02T09:00:00Z").toLocaleDateString("sv-SE");
+    const stats: DailyStats = { date: today, high: 15, low: 8 };
+    const tabCount = 9;
+    const previousDayLow = 10;
+
+    // Act
+    const color = determineBadgeColor(tabCount, stats, previousDayLow);
+
+    // Assert
+    assertStrictEquals(color, "green");
+  });
+});
