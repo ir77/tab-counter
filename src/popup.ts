@@ -1,43 +1,62 @@
 /// <reference types="npm:@types/chrome" />
 import { DailyStats, StorageData } from "./domain/types.ts";
 
-// UI要素を取得
-const tabCountElement = document.getElementById("tabCount");
-const highCountElement = document.getElementById("highCount");
-const lowCountElement = document.getElementById("lowCount");
-const previousDayContainer = document.getElementById("previousDayContainer");
-const previousDayLastCountElement = document.getElementById(
-  "previousDayLastCount",
-);
+// UI要素を取得（テスト環境では実行されない）
+const tabCountElement = typeof document !== "undefined"
+  ? document.getElementById("tabCount")
+  : null;
+const highCountElement = typeof document !== "undefined"
+  ? document.getElementById("highCount")
+  : null;
+const lowCountElement = typeof document !== "undefined"
+  ? document.getElementById("lowCount")
+  : null;
+const previousDayContainer = typeof document !== "undefined"
+  ? document.getElementById("previousDayContainer")
+  : null;
+const previousDayLastCountElement = typeof document !== "undefined"
+  ? document.getElementById("previousDayLastCount")
+  : null;
 
 // ---- Helper Functions for UI Update ----
 
-function updateTabCountDisplay(count?: number) {
-  if (!tabCountElement) return;
+export function updateTabCountDisplay(
+  count?: number,
+  element: HTMLElement | null = tabCountElement,
+) {
+  if (!element) return;
 
-  tabCountElement.textContent = count !== undefined ? count.toString() : "...";
+  element.textContent = count !== undefined ? count.toString() : "...";
 }
 
-function updateDailyStatsDisplay(stats?: DailyStats) {
-  if (!highCountElement || !lowCountElement) return;
+export function updateDailyStatsDisplay(
+  stats?: DailyStats,
+  highElement: HTMLElement | null = highCountElement,
+  lowElement: HTMLElement | null = lowCountElement,
+) {
+  if (!highElement || !lowElement) return;
 
   if (stats) {
-    highCountElement.textContent = stats.high.toString();
-    lowCountElement.textContent = stats.low.toString();
+    highElement.textContent = stats.high.toString();
+    lowElement.textContent = stats.low.toString();
   } else {
-    highCountElement.textContent = "...";
-    lowCountElement.textContent = "...";
+    highElement.textContent = "...";
+    lowElement.textContent = "...";
   }
 }
 
-function updatePreviousDayDisplay(count?: number) {
-  if (!previousDayContainer || !previousDayLastCountElement) return;
+export function updatePreviousDayDisplay(
+  count?: number,
+  container: HTMLElement | null = previousDayContainer,
+  lastCountElement: HTMLElement | null = previousDayLastCountElement,
+) {
+  if (!container || !lastCountElement) return;
 
   if (count !== undefined && count !== null) {
-    previousDayLastCountElement.textContent = count.toString();
-    previousDayContainer.style.display = "block";
+    lastCountElement.textContent = count.toString();
+    container.style.display = "block";
   } else {
-    previousDayContainer.style.display = "none";
+    container.style.display = "none";
   }
 }
 
@@ -56,27 +75,29 @@ function updateUI() {
   });
 }
 
-// ポップアップが開かれたときに一度実行
-updateUI();
+// ポップアップが開かれたときに一度実行（テスト環境では実行されない）
+if (typeof chrome !== "undefined" && chrome.storage) {
+  updateUI();
 
-// ストレージの値が変更されたときに表示を更新
-chrome.storage.onChanged.addListener(
-  (
-    changes: { [key: string]: chrome.storage.StorageChange },
-    namespace: string,
-  ) => {
-    if (namespace === "local") {
-      if (changes.tabCount) {
-        updateTabCountDisplay(changes.tabCount.newValue);
+  // ストレージの値が変更されたときに表示を更新
+  chrome.storage.onChanged.addListener(
+    (
+      changes: { [key: string]: chrome.storage.StorageChange },
+      namespace: string,
+    ) => {
+      if (namespace === "local") {
+        if (changes.tabCount) {
+          updateTabCountDisplay(changes.tabCount.newValue);
+        }
+        if (changes.dailyStats) {
+          updateDailyStatsDisplay(changes.dailyStats.newValue);
+        }
+        if (changes.lastAvailablePreviousDayCount) {
+          updatePreviousDayDisplay(
+            changes.lastAvailablePreviousDayCount.newValue,
+          );
+        }
       }
-      if (changes.dailyStats) {
-        updateDailyStatsDisplay(changes.dailyStats.newValue);
-      }
-      if (changes.lastAvailablePreviousDayCount) {
-        updatePreviousDayDisplay(
-          changes.lastAvailablePreviousDayCount.newValue,
-        );
-      }
-    }
-  },
-);
+    },
+  );
+}
