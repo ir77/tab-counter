@@ -3,9 +3,9 @@ const highCountElement = document.getElementById("highCount");
 const lowCountElement = document.getElementById("lowCount");
 const previousDayContainer = document.getElementById("previousDayContainer");
 const previousDayLastCountElement = document.getElementById("previousDayLastCount");
-function updateTabCountDisplay(count) {
-    if (!tabCountElement) return;
-    tabCountElement.textContent = count !== undefined ? count.toString() : "...";
+function updateTabCountDisplay(element, count) {
+    if (!element) return;
+    element.textContent = count !== undefined ? count.toString() : "...";
 }
 function updateDailyStatsDisplay(stats) {
     if (!highCountElement || !lowCountElement) return;
@@ -32,7 +32,7 @@ function updateUI() {
         "dailyStats",
         "lastAvailablePreviousDayCount"
     ], (result)=>{
-        updateTabCountDisplay(result.tabCount);
+        updateTabCountDisplay(tabCountElement, result.tabCount);
         updateDailyStatsDisplay(result.dailyStats);
         updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
     });
@@ -41,7 +41,7 @@ updateUI();
 chrome.storage.onChanged.addListener((changes, namespace)=>{
     if (namespace === "local") {
         if (changes.tabCount) {
-            updateTabCountDisplay(changes.tabCount.newValue);
+            updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
         }
         if (changes.dailyStats) {
             updateDailyStatsDisplay(changes.dailyStats.newValue);

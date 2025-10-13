@@ -12,10 +12,13 @@ const previousDayLastCountElement = document.getElementById(
 
 // ---- Helper Functions for UI Update ----
 
-export function updateTabCountDisplay(count?: number) {
-  if (!tabCountElement) return;
+export function updateTabCountDisplay(
+  element: HTMLElement | null,
+  count?: number,
+) {
+  if (!element) return;
 
-  tabCountElement.textContent = count !== undefined ? count.toString() : "...";
+  element.textContent = count !== undefined ? count.toString() : "...";
 }
 
 export function updateDailyStatsDisplay(stats?: DailyStats) {
@@ -50,7 +53,7 @@ function updateUI() {
     "dailyStats",
     "lastAvailablePreviousDayCount",
   ], (result: StorageData) => {
-    updateTabCountDisplay(result.tabCount);
+    updateTabCountDisplay(tabCountElement, result.tabCount);
     updateDailyStatsDisplay(result.dailyStats);
     updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
   });
@@ -67,7 +70,7 @@ chrome.storage.onChanged.addListener(
   ) => {
     if (namespace === "local") {
       if (changes.tabCount) {
-        updateTabCountDisplay(changes.tabCount.newValue);
+        updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
       }
       if (changes.dailyStats) {
         updateDailyStatsDisplay(changes.dailyStats.newValue);
