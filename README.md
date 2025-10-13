@@ -39,11 +39,16 @@ deno task build
 ```
 
 ### TODO
+#### **その他＊＊
+- [ ] CI実装の二重実装をやめる
 
 #### **テストの拡充 (Test Expansion)**
 
 - [ ] **`popup.ts` の単体テスト**
-  - [ ] `popup_test.ts` のセットアップ (DOM, `chrome.storage` API のモック)
+  - [ ] `popup_test.ts` のセットアップ
+    - [ ] DOM APIのモック 
+    - [ ] DOM操作部分の純粋関数化
+    - [ ] `chrome.storage` API のモック)
   - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
 - [ ] **E2E (UI) テスト**
   - [ ] E2Eテストフレームワーク (Playwright等) の導入と設定
