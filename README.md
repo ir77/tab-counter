@@ -39,9 +39,6 @@ deno task build
 ```
 
 ### TODO
-#### **その他＊＊
-- [ ] CI実装の二重実装をやめる
-
 #### **テストの拡充 (Test Expansion)**
 
 - [ ] **`popup.ts` の単体テスト**
