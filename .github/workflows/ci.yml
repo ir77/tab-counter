@@ -22,11 +22,11 @@ jobs:
           deno-version: v2.4.x
           cache: true
 
-      - name: Run deno task build
-        run: deno task build
-
       - name: Run deno task fmt-ci
         run: deno task fmt-ci
+
+      - name: Run deno task check
+        run: deno task check
 
       - name: Run deno task lint
         run: deno task lint
@@ -52,3 +52,6 @@ jobs:
               console.log(\`SUCCESS: Coverage \${coverage}% meets the 80% threshold\`);
             }
           "
+
+      - name: Run deno task build
+        run: deno task build
