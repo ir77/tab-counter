@@ -40,10 +40,6 @@ deno task build
 
 #### **テストの拡充 (Test Expansion)**
 
-- [ ] **`background.ts` の単体テスト**
-  - [ ] `background_test.ts` のセットアップ (`chrome` API のモック)
-  - [ ] `updateDailyStats` 関数のテストケースを追加する
-  - [ ] `determineBadgeColor` 関数のテストケースを追加する
 - [ ] **`popup.ts` の単体テスト**
   - [ ] `popup_test.ts` のセットアップ (DOM, `chrome.storage` API のモック)
   - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
