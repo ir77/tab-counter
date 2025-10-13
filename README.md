@@ -1,5 +1,7 @@
 # Tab Counter
 
+[![Deno CI](https://github.com/ir77/tab-counter/actions/workflows/ci.yml/badge.svg)](https://github.com/ir77/tab-counter/actions/workflows/ci.yml)
+
 ## 概要
 
 開いているタブの数をアイコンに表示するGoogle
