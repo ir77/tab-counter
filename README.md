@@ -48,7 +48,7 @@ deno task build
   - [ ] `popup_test.ts` のセットアップ
     - [ ] DOM APIのモック 
     - [ ] DOM操作部分の純粋関数化
-    - [ ] `chrome.storage` API のモック)
+    - [ ] `chrome.storage` API のモック
   - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
 - [ ] **E2E (UI) テスト**
   - [ ] E2Eテストフレームワーク (Playwright等) の導入と設定
