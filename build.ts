@@ -6,16 +6,18 @@ import { format } from "std/datetime/format.ts";
 const outDir = "./dist";
 const srcDir = "./src";
 
-async function build(entryPoint: string) {
+async function build(entryPoint: string, outputName?: string) {
   const result = await bundle(`${srcDir}/${entryPoint}`);
 
-  const outFile = `${outDir}/${entryPoint.replace(".ts", ".js")}`;
+  const outFile = outputName
+    ? `${outDir}/${outputName}`
+    : `${outDir}/${entryPoint.replace(".ts", ".js")}`;
   await Deno.writeTextFile(outFile, result.code);
 }
 
 async function copyStaticFiles() {
-  await copy(`${srcDir}/popup.html`, `${outDir}/popup.html`);
-  await copy(`${srcDir}/popup.css`, `${outDir}/popup.css`);
+  await copy(`${srcDir}/ui/popup.html`, `${outDir}/popup.html`);
+  await copy(`${srcDir}/ui/popup.css`, `${outDir}/popup.css`);
   await copy(`${srcDir}/manifest.json`, `${outDir}/manifest.json`);
 }
 
@@ -34,6 +36,6 @@ if (!Deno.env.get("CI")) {
 
 await Promise.all([
   build("background.ts"),
-  build("popup.ts"),
+  build("ui/popup.ts", "popup.js"),
   copyStaticFiles(),
 ]);
