@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tab Counter",
-  "version": "1.25.1002.1024",
+  "version": "1.25.1013.1116",
   "description": "現在開いているタブの数をアイコンに表示します。",
   "permissions": [
     "tabs",

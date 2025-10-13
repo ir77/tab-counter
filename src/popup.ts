@@ -12,13 +12,13 @@ const previousDayLastCountElement = document.getElementById(
 
 // ---- Helper Functions for UI Update ----
 
-function updateTabCountDisplay(count?: number) {
+export function updateTabCountDisplay(count?: number) {
   if (!tabCountElement) return;
 
   tabCountElement.textContent = count !== undefined ? count.toString() : "...";
 }
 
-function updateDailyStatsDisplay(stats?: DailyStats) {
+export function updateDailyStatsDisplay(stats?: DailyStats) {
   if (!highCountElement || !lowCountElement) return;
 
   if (stats) {
@@ -30,7 +30,7 @@ function updateDailyStatsDisplay(stats?: DailyStats) {
   }
 }
 
-function updatePreviousDayDisplay(count?: number) {
+export function updatePreviousDayDisplay(count?: number) {
   if (!previousDayContainer || !previousDayLastCountElement) return;
 
   if (count !== undefined && count !== null) {

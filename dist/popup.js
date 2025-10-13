@@ -51,3 +51,6 @@ chrome.storage.onChanged.addListener((changes, namespace)=>{
         }
     }
 });
+export { updateTabCountDisplay as updateTabCountDisplay };
+export { updateDailyStatsDisplay as updateDailyStatsDisplay };
+export { updatePreviousDayDisplay as updatePreviousDayDisplay };
