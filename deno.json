@@ -2,7 +2,7 @@
   "tasks": {
     "check": "deno check .",
     "lint": "deno lint",
-    "test": "deno test --coverage=coverage",
+    "test": "deno test --allow-read --coverage=coverage",
     "coverage": "deno coverage coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
@@ -22,6 +22,7 @@
   "imports": {
     "deno_emit": "https://deno.land/x/emit@0.40.0/mod.ts",
     "std/": "https://deno.land/std@0.224.0/",
-    "assert/": "https://deno.land/std@0.208.0/assert/"
+    "assert/": "https://deno.land/std@0.208.0/assert/",
+    "deno-dom": "jsr:@b-fuze/deno-dom"
   }
 }

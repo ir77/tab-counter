@@ -47,10 +47,6 @@ Deno.test("updateUI", async (t) => {
       assertStrictEquals(mockPopupElements.highCount.textContent, "20");
       assertStrictEquals(mockPopupElements.lowCount.textContent, "5");
       assertStrictEquals(
-        mockPopupElements.previousDayContainer.style.display,
-        "block",
-      );
-      assertStrictEquals(
         mockPopupElements.previousDayLastCount.textContent,
         "12",
       );
@@ -80,8 +76,8 @@ Deno.test("updateUI", async (t) => {
     assertStrictEquals(mockPopupElements.highCount.textContent, "...");
     assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
     assertStrictEquals(
-      mockPopupElements.previousDayContainer.style.display,
-      "none",
+      mockPopupElements.previousDayLastCount.textContent,
+      "データなし",
     );
   });
 
@@ -108,8 +104,8 @@ Deno.test("updateUI", async (t) => {
     assertStrictEquals(mockPopupElements.highCount.textContent, "30");
     assertStrictEquals(mockPopupElements.lowCount.textContent, "10");
     assertStrictEquals(
-      mockPopupElements.previousDayContainer.style.display,
-      "none",
+      mockPopupElements.previousDayLastCount.textContent,
+      "データなし",
     );
   });
 
@@ -141,10 +137,6 @@ Deno.test("updateUI", async (t) => {
       assertStrictEquals(mockPopupElements.highCount.textContent, "...");
       assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
       assertStrictEquals(
-        mockPopupElements.previousDayContainer.style.display,
-        "block",
-      );
-      assertStrictEquals(
         mockPopupElements.previousDayLastCount.textContent,
         "18",
       );
@@ -154,7 +146,6 @@ Deno.test("updateUI", async (t) => {
   await t.step("ストレージが空の場合にプレースホルダーを表示する", async () => {
     // Arrange
     resetMockPopupElements();
-    mockPopupElements.previousDayContainer.style.display = "block"; // 初期状態を変更
 
     const storageData: Partial<StorageData> = {};
 
@@ -173,8 +164,8 @@ Deno.test("updateUI", async (t) => {
     assertStrictEquals(mockPopupElements.highCount.textContent, "...");
     assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
     assertStrictEquals(
-      mockPopupElements.previousDayContainer.style.display,
-      "none",
+      mockPopupElements.previousDayLastCount.textContent,
+      "データなし",
     );
   });
 });

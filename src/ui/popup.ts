@@ -46,9 +46,8 @@ export function updatePreviousDayDisplay(
 
   if (count !== undefined && count !== null) {
     countElement.textContent = count.toString();
-    container.style.display = "block";
   } else {
-    container.style.display = "none";
+    countElement.textContent = "データなし";
   }
 }
 

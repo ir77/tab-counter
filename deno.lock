@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@b-fuze/deno-dom@*": "0.1.56",
     "jsr:@deno/cache-dir@0.8": "0.8.0",
     "jsr:@deno/graph@~0.69.7": "0.69.10",
     "jsr:@std/assert@~0.218.2": "0.218.2",
@@ -12,6 +13,9 @@
     "npm:@types/chrome@*": "0.1.12"
   },
   "jsr": {
+    "@b-fuze/deno-dom@0.1.56": {
+      "integrity": "8030e2dc1d8750f1682b53462ab893d9c3470f2287feecbe22f44a88c54ab148"
+    },
     "@deno/cache-dir@0.8.0": {
       "integrity": "e87e80a404958f6350d903e6238b72afb92468378b0b32111f7a1e4916ac7fe7",
       "dependencies": [
@@ -157,6 +161,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@b-fuze/deno-dom@*",
       "npm:@types/chrome@*"
     ]
   }
