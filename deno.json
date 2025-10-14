@@ -2,11 +2,11 @@
   "tasks": {
     "check": "deno check .",
     "lint": "deno lint",
-    "test:cov": "deno test --coverage=coverage",
+    "test": "deno test --coverage=coverage",
     "coverage": "deno coverage coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
-    "all": "deno task check && deno task lint && deno task test:cov && deno task build && deno task fmt"
+    "all": "deno task check && deno task lint && deno task test && deno task build && deno task fmt"
   },
   "fmt": {
     "exclude": ["dist", "*.md"]
