@@ -55,7 +55,7 @@ export function updatePreviousDayDisplay(
 // ---- Main Logic ----
 
 // ストレージから値を読み込んで表示する関数
-function updateUI() {
+export function updateUI() {
   chrome.storage.local.get([
     "tabCount",
     "dailyStats",

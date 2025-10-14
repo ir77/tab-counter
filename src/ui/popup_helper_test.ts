@@ -1,5 +1,5 @@
 import { assertStrictEquals } from "assert/mod.ts";
-import { chromeStub, documentStub } from "../stubs/stubs.ts";
+import { chromeStub, documentStub } from "../testdoubles/testdoubles.ts";
 
 const globalRecord = globalThis as Record<string, unknown>;
 globalRecord.document = documentStub as unknown as Document;
