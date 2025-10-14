@@ -7,23 +7,23 @@ function updateTabCountDisplay(element, count) {
     if (!element) return;
     element.textContent = count !== undefined ? count.toString() : "...";
 }
-function updateDailyStatsDisplay(stats) {
-    if (!highCountElement || !lowCountElement) return;
+function updateDailyStatsDisplay(highElement, lowElement, stats) {
+    if (!highElement || !lowElement) return;
     if (stats) {
-        highCountElement.textContent = stats.high.toString();
-        lowCountElement.textContent = stats.low.toString();
+        highElement.textContent = stats.high.toString();
+        lowElement.textContent = stats.low.toString();
     } else {
-        highCountElement.textContent = "...";
-        lowCountElement.textContent = "...";
+        highElement.textContent = "...";
+        lowElement.textContent = "...";
     }
 }
-function updatePreviousDayDisplay(count) {
-    if (!previousDayContainer || !previousDayLastCountElement) return;
+function updatePreviousDayDisplay(container, countElement, count) {
+    if (!container || !countElement) return;
     if (count !== undefined && count !== null) {
-        previousDayLastCountElement.textContent = count.toString();
-        previousDayContainer.style.display = "block";
+        countElement.textContent = count.toString();
+        container.style.display = "block";
     } else {
-        previousDayContainer.style.display = "none";
+        container.style.display = "none";
     }
 }
 function updateUI() {
@@ -33,8 +33,8 @@ function updateUI() {
         "lastAvailablePreviousDayCount"
     ], (result)=>{
         updateTabCountDisplay(tabCountElement, result.tabCount);
-        updateDailyStatsDisplay(result.dailyStats);
-        updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
+        updateDailyStatsDisplay(highCountElement, lowCountElement, result.dailyStats);
+        updatePreviousDayDisplay(previousDayContainer, previousDayLastCountElement, result.lastAvailablePreviousDayCount);
     });
 }
 updateUI();
@@ -44,10 +44,10 @@ chrome.storage.onChanged.addListener((changes, namespace)=>{
             updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
         }
         if (changes.dailyStats) {
-            updateDailyStatsDisplay(changes.dailyStats.newValue);
+            updateDailyStatsDisplay(highCountElement, lowCountElement, changes.dailyStats.newValue);
         }
         if (changes.lastAvailablePreviousDayCount) {
-            updatePreviousDayDisplay(changes.lastAvailablePreviousDayCount.newValue);
+            updatePreviousDayDisplay(previousDayContainer, previousDayLastCountElement, changes.lastAvailablePreviousDayCount.newValue);
         }
     }
 });

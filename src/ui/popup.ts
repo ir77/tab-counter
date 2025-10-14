@@ -21,26 +21,34 @@ export function updateTabCountDisplay(
   element.textContent = count !== undefined ? count.toString() : "...";
 }
 
-export function updateDailyStatsDisplay(stats?: DailyStats) {
-  if (!highCountElement || !lowCountElement) return;
+export function updateDailyStatsDisplay(
+  highElement: HTMLElement | null,
+  lowElement: HTMLElement | null,
+  stats?: DailyStats,
+) {
+  if (!highElement || !lowElement) return;
 
   if (stats) {
-    highCountElement.textContent = stats.high.toString();
-    lowCountElement.textContent = stats.low.toString();
+    highElement.textContent = stats.high.toString();
+    lowElement.textContent = stats.low.toString();
   } else {
-    highCountElement.textContent = "...";
-    lowCountElement.textContent = "...";
+    highElement.textContent = "...";
+    lowElement.textContent = "...";
   }
 }
 
-export function updatePreviousDayDisplay(count?: number) {
-  if (!previousDayContainer || !previousDayLastCountElement) return;
+export function updatePreviousDayDisplay(
+  container: HTMLElement | null,
+  countElement: HTMLElement | null,
+  count?: number,
+) {
+  if (!container || !countElement) return;
 
   if (count !== undefined && count !== null) {
-    previousDayLastCountElement.textContent = count.toString();
-    previousDayContainer.style.display = "block";
+    countElement.textContent = count.toString();
+    container.style.display = "block";
   } else {
-    previousDayContainer.style.display = "none";
+    container.style.display = "none";
   }
 }
 
@@ -54,8 +62,16 @@ function updateUI() {
     "lastAvailablePreviousDayCount",
   ], (result: StorageData) => {
     updateTabCountDisplay(tabCountElement, result.tabCount);
-    updateDailyStatsDisplay(result.dailyStats);
-    updatePreviousDayDisplay(result.lastAvailablePreviousDayCount);
+    updateDailyStatsDisplay(
+      highCountElement,
+      lowCountElement,
+      result.dailyStats,
+    );
+    updatePreviousDayDisplay(
+      previousDayContainer,
+      previousDayLastCountElement,
+      result.lastAvailablePreviousDayCount,
+    );
   });
 }
 
@@ -73,10 +89,16 @@ chrome.storage.onChanged.addListener(
         updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
       }
       if (changes.dailyStats) {
-        updateDailyStatsDisplay(changes.dailyStats.newValue);
+        updateDailyStatsDisplay(
+          highCountElement,
+          lowCountElement,
+          changes.dailyStats.newValue,
+        );
       }
       if (changes.lastAvailablePreviousDayCount) {
         updatePreviousDayDisplay(
+          previousDayContainer,
+          previousDayLastCountElement,
           changes.lastAvailablePreviousDayCount.newValue,
         );
       }
