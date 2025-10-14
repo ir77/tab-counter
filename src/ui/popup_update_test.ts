@@ -18,14 +18,16 @@ globalRecord.chrome = createMockChromeStorage(
 
 const { updateUI } = await import("./popup.ts");
 
-Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
-  // Arrange
+Deno.test.beforeEach(() => {
   // 要素の初期状態をリセット
   elements.tabCount.textContent = "...";
   elements.highCount.textContent = "...";
   elements.lowCount.textContent = "...";
   elements.previousDayLastCount.textContent = "...";
+});
 
+Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
+  // Arrange
   const storageData: Partial<StorageData> = {
     tabCount: 15,
     dailyStats: { date: "2025-10-14", high: 20, low: 5 },
@@ -57,12 +59,6 @@ Deno.test("updateUI - 全てのデータをストレージから読み込んで�
 
 Deno.test("updateUI - tabCountのみが存在する場合に正しく表示する", async () => {
   // Arrange
-  // 要素の初期状態をリセット
-  elements.tabCount.textContent = "...";
-  elements.highCount.textContent = "...";
-  elements.lowCount.textContent = "...";
-  elements.previousDayLastCount.textContent = "...";
-
   const storageData: Partial<StorageData> = {
     tabCount: 8,
   };
@@ -89,12 +85,6 @@ Deno.test("updateUI - tabCountのみが存在する場合に正しく表示す�
 
 Deno.test("updateUI - dailyStatsのみが存在する場合に正しく表示する", async () => {
   // Arrange
-  // 要素の初期状態をリセット
-  elements.tabCount.textContent = "...";
-  elements.highCount.textContent = "...";
-  elements.lowCount.textContent = "...";
-  elements.previousDayLastCount.textContent = "...";
-
   const storageData: Partial<StorageData> = {
     dailyStats: { date: "2025-10-14", high: 30, low: 10 },
   };
@@ -121,12 +111,6 @@ Deno.test("updateUI - dailyStatsのみが存在する場合に正しく表示す
 
 Deno.test("updateUI - lastAvailablePreviousDayCountが存在する場合に前日のセクションを表示する", async () => {
   // Arrange
-  // 要素の初期状態をリセット
-  elements.tabCount.textContent = "...";
-  elements.highCount.textContent = "...";
-  elements.lowCount.textContent = "...";
-  elements.previousDayLastCount.textContent = "...";
-
   const storageData: Partial<StorageData> = {
     lastAvailablePreviousDayCount: 18,
   };
@@ -156,12 +140,6 @@ Deno.test("updateUI - lastAvailablePreviousDayCountが存在する場合に前�
 
 Deno.test("updateUI - ストレージが空の場合にプレースホルダーを表示する", async () => {
   // Arrange
-  // 要素の初期状態をリセット
-  elements.tabCount.textContent = "...";
-  elements.highCount.textContent = "...";
-  elements.lowCount.textContent = "...";
-  elements.previousDayLastCount.textContent = "...";
-
   const storageData: Partial<StorageData> = {};
 
   globalRecord.chrome = createMockChromeStorage(
