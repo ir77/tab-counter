@@ -14,11 +14,3 @@ export const chromeStub = {
     },
   },
 };
-
-export class FakeElement implements Pick<HTMLElement, "textContent"> {
-  textContent = "";
-}
-
-export function toHTMLElement(element: FakeElement): HTMLElement {
-  return element as unknown as HTMLElement;
-}
