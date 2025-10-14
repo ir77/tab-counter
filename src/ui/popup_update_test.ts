@@ -3,13 +3,15 @@ import { StorageData } from "../domain/types.ts";
 import {
   createMockChromeStorage,
   createMockDocument,
-  mockPopupElements,
-  resetMockPopupElements,
 } from "../testdoubles/testdoubles.ts";
 
 // グローバルモックを設定（importの前に必要）
 const globalRecord = globalThis as Record<string, unknown>;
-globalRecord.document = createMockDocument();
+const documentMock = createMockDocument();
+const elements = documentMock._elements;
+
+globalRecord.document = documentMock;
+
 globalRecord.chrome = createMockChromeStorage(
   (_keys: string[], _callback: (result: unknown) => void) => {},
 );
@@ -21,7 +23,11 @@ Deno.test("updateUI", async (t) => {
     "全てのデータをストレージから読み込んで表示を更新する",
     async () => {
       // Arrange
-      resetMockPopupElements();
+      // 要素の初期状態をリセット
+      elements.tabCount.textContent = "...";
+      elements.highCount.textContent = "...";
+      elements.lowCount.textContent = "...";
+      elements.previousDayLastCount.textContent = "...";
 
       const storageData: Partial<StorageData> = {
         tabCount: 15,
@@ -43,11 +49,11 @@ Deno.test("updateUI", async (t) => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       // Assert
-      assertStrictEquals(mockPopupElements.tabCount.textContent, "15");
-      assertStrictEquals(mockPopupElements.highCount.textContent, "20");
-      assertStrictEquals(mockPopupElements.lowCount.textContent, "5");
+      assertStrictEquals(elements.tabCount.textContent, "15");
+      assertStrictEquals(elements.highCount.textContent, "20");
+      assertStrictEquals(elements.lowCount.textContent, "5");
       assertStrictEquals(
-        mockPopupElements.previousDayLastCount.textContent,
+        elements.previousDayLastCount.textContent,
         "12",
       );
     },
@@ -55,7 +61,11 @@ Deno.test("updateUI", async (t) => {
 
   await t.step("tabCountのみが存在する場合に正しく表示する", async () => {
     // Arrange
-    resetMockPopupElements();
+    // 要素の初期状態をリセット
+    elements.tabCount.textContent = "...";
+    elements.highCount.textContent = "...";
+    elements.lowCount.textContent = "...";
+    elements.previousDayLastCount.textContent = "...";
 
     const storageData: Partial<StorageData> = {
       tabCount: 8,
@@ -72,18 +82,22 @@ Deno.test("updateUI", async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     // Assert
-    assertStrictEquals(mockPopupElements.tabCount.textContent, "8");
-    assertStrictEquals(mockPopupElements.highCount.textContent, "...");
-    assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
+    assertStrictEquals(elements.tabCount.textContent, "8");
+    assertStrictEquals(elements.highCount.textContent, "...");
+    assertStrictEquals(elements.lowCount.textContent, "...");
     assertStrictEquals(
-      mockPopupElements.previousDayLastCount.textContent,
+      elements.previousDayLastCount.textContent,
       "データなし",
     );
   });
 
   await t.step("dailyStatsのみが存在する場合に正しく表示する", async () => {
     // Arrange
-    resetMockPopupElements();
+    // 要素の初期状態をリセット
+    elements.tabCount.textContent = "...";
+    elements.highCount.textContent = "...";
+    elements.lowCount.textContent = "...";
+    elements.previousDayLastCount.textContent = "...";
 
     const storageData: Partial<StorageData> = {
       dailyStats: { date: "2025-10-14", high: 30, low: 10 },
@@ -100,11 +114,11 @@ Deno.test("updateUI", async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     // Assert
-    assertStrictEquals(mockPopupElements.tabCount.textContent, "...");
-    assertStrictEquals(mockPopupElements.highCount.textContent, "30");
-    assertStrictEquals(mockPopupElements.lowCount.textContent, "10");
+    assertStrictEquals(elements.tabCount.textContent, "...");
+    assertStrictEquals(elements.highCount.textContent, "30");
+    assertStrictEquals(elements.lowCount.textContent, "10");
     assertStrictEquals(
-      mockPopupElements.previousDayLastCount.textContent,
+      elements.previousDayLastCount.textContent,
       "データなし",
     );
   });
@@ -113,7 +127,11 @@ Deno.test("updateUI", async (t) => {
     "lastAvailablePreviousDayCountが存在する場合に前日のセクションを表示する",
     async () => {
       // Arrange
-      resetMockPopupElements();
+      // 要素の初期状態をリセット
+      elements.tabCount.textContent = "...";
+      elements.highCount.textContent = "...";
+      elements.lowCount.textContent = "...";
+      elements.previousDayLastCount.textContent = "...";
 
       const storageData: Partial<StorageData> = {
         lastAvailablePreviousDayCount: 18,
@@ -133,11 +151,11 @@ Deno.test("updateUI", async (t) => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       // Assert
-      assertStrictEquals(mockPopupElements.tabCount.textContent, "...");
-      assertStrictEquals(mockPopupElements.highCount.textContent, "...");
-      assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
+      assertStrictEquals(elements.tabCount.textContent, "...");
+      assertStrictEquals(elements.highCount.textContent, "...");
+      assertStrictEquals(elements.lowCount.textContent, "...");
       assertStrictEquals(
-        mockPopupElements.previousDayLastCount.textContent,
+        elements.previousDayLastCount.textContent,
         "18",
       );
     },
@@ -145,7 +163,11 @@ Deno.test("updateUI", async (t) => {
 
   await t.step("ストレージが空の場合にプレースホルダーを表示する", async () => {
     // Arrange
-    resetMockPopupElements();
+    // 要素の初期状態をリセット
+    elements.tabCount.textContent = "...";
+    elements.highCount.textContent = "...";
+    elements.lowCount.textContent = "...";
+    elements.previousDayLastCount.textContent = "...";
 
     const storageData: Partial<StorageData> = {};
 
@@ -160,11 +182,11 @@ Deno.test("updateUI", async (t) => {
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     // Assert
-    assertStrictEquals(mockPopupElements.tabCount.textContent, "...");
-    assertStrictEquals(mockPopupElements.highCount.textContent, "...");
-    assertStrictEquals(mockPopupElements.lowCount.textContent, "...");
+    assertStrictEquals(elements.tabCount.textContent, "...");
+    assertStrictEquals(elements.highCount.textContent, "...");
+    assertStrictEquals(elements.lowCount.textContent, "...");
     assertStrictEquals(
-      mockPopupElements.previousDayLastCount.textContent,
+      elements.previousDayLastCount.textContent,
       "データなし",
     );
   });

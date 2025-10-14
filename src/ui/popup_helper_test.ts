@@ -1,5 +1,10 @@
 import { assertStrictEquals } from "assert/mod.ts";
-import { chromeStub, documentStub } from "../testdoubles/testdoubles.ts";
+import {
+  chromeStub,
+  createMockPopupElements,
+  documentStub,
+} from "../testdoubles/testdoubles.ts";
+import type { DailyStats } from "../domain/types.ts";
 
 const globalRecord = globalThis as Record<string, unknown>;
 globalRecord.document = documentStub as unknown as Document;
@@ -14,159 +19,206 @@ const {
 Deno.test("updateTabCountDisplay", async (t) => {
   await t.step("タブ数を文字列として表示する", () => {
     // Arrange
-    const mockElement = { textContent: "" } as HTMLElement;
-    const tabCount = 12;
+    const elements = createMockPopupElements();
+    const count = 12;
 
     // Act
-    updateTabCountDisplay(mockElement, tabCount);
+    updateTabCountDisplay(elements.tabCount, count);
 
     // Assert
-    assertStrictEquals(mockElement.textContent, "12");
+    assertStrictEquals(elements.tabCount.textContent, "12");
   });
 
   await t.step("countが未定義の場合にプレースホルダーを表示する", () => {
     // Arrange
-    const mockElement = { textContent: "" } as HTMLElement;
+    const elements = createMockPopupElements();
 
     // Act
-    updateTabCountDisplay(mockElement, undefined);
+    updateTabCountDisplay(elements.tabCount, undefined);
 
     // Assert
-    assertStrictEquals(mockElement.textContent, "...");
+    assertStrictEquals(elements.tabCount.textContent, "...");
   });
 
   await t.step("要素がnullの場合に処理を行わない", () => {
     // Arrange
-    const mockElement = { textContent: "10" } as HTMLElement;
+    const elements = createMockPopupElements();
+    elements.tabCount.textContent = "10";
 
     // Act
     const result = updateTabCountDisplay(null, 99);
 
     // Assert
     assertStrictEquals(result, undefined);
-    assertStrictEquals(mockElement.textContent, "10");
+    assertStrictEquals(elements.tabCount.textContent, "10");
   });
 });
 
 Deno.test("updateDailyStatsDisplay", async (t) => {
-  await t.step("統計情報を表示する", () => {
+  await t.step("最大値と最小値を更新する", () => {
     // Arrange
-    const mockHighElement = { textContent: "" } as HTMLElement;
-    const mockLowElement = { textContent: "" } as HTMLElement;
-    const stats = { date: "2025-10-14", high: 42, low: 5 };
+    const elements = createMockPopupElements();
+    const stats: DailyStats = {
+      date: "2024-01-01",
+      high: 42,
+      low: 3,
+    };
 
     // Act
-    updateDailyStatsDisplay(mockHighElement, mockLowElement, stats);
+    updateDailyStatsDisplay(
+      elements.highCount,
+      elements.lowCount,
+      stats,
+    );
 
     // Assert
-    assertStrictEquals(mockHighElement.textContent, "42");
-    assertStrictEquals(mockLowElement.textContent, "5");
+    assertStrictEquals(elements.highCount.textContent, "42");
+    assertStrictEquals(elements.lowCount.textContent, "3");
   });
 
-  await t.step("statsが未定義の場合にプレースホルダーを表示する", () => {
+  await t.step("statsがundefinedの場合にプレースホルダーを表示する", () => {
     // Arrange
-    const mockHighElement = { textContent: "" } as HTMLElement;
-    const mockLowElement = { textContent: "" } as HTMLElement;
+    const elements = createMockPopupElements();
 
     // Act
-    updateDailyStatsDisplay(mockHighElement, mockLowElement, undefined);
+    updateDailyStatsDisplay(
+      elements.highCount,
+      elements.lowCount,
+      undefined,
+    );
 
     // Assert
-    assertStrictEquals(mockHighElement.textContent, "...");
-    assertStrictEquals(mockLowElement.textContent, "...");
+    assertStrictEquals(elements.highCount.textContent, "...");
+    assertStrictEquals(elements.lowCount.textContent, "...");
   });
 
-  await t.step("highElementがnullの場合に処理を行わない", () => {
+  await t.step("highCountがnullの場合は処理を行わない", () => {
     // Arrange
-    const mockLowElement = { textContent: "5" } as HTMLElement;
-    const stats = { date: "2025-10-14", high: 42, low: 10 };
+    const elements = createMockPopupElements();
+    elements.highCount.textContent = "50";
+    elements.lowCount.textContent = "5";
+    const stats: DailyStats = {
+      date: "2024-01-01",
+      high: 100,
+      low: 1,
+    };
 
     // Act
-    const result = updateDailyStatsDisplay(null, mockLowElement, stats);
+    updateDailyStatsDisplay(null, elements.lowCount, stats);
 
     // Assert
-    assertStrictEquals(result, undefined);
-    assertStrictEquals(mockLowElement.textContent, "5");
+    assertStrictEquals(elements.highCount.textContent, "50");
+    assertStrictEquals(elements.lowCount.textContent, "5");
   });
 
-  await t.step("lowElementがnullの場合に処理を行わない", () => {
+  await t.step("lowCountがnullの場合は処理を行わない", () => {
     // Arrange
-    const mockHighElement = { textContent: "42" } as HTMLElement;
-    const stats = { date: "2025-10-14", high: 100, low: 10 };
+    const elements = createMockPopupElements();
+    elements.highCount.textContent = "50";
+    elements.lowCount.textContent = "5";
+    const stats: DailyStats = {
+      date: "2024-01-01",
+      high: 100,
+      low: 1,
+    };
 
     // Act
-    const result = updateDailyStatsDisplay(mockHighElement, null, stats);
+    updateDailyStatsDisplay(elements.highCount, null, stats);
 
     // Assert
-    assertStrictEquals(result, undefined);
-    assertStrictEquals(mockHighElement.textContent, "42");
+    assertStrictEquals(elements.highCount.textContent, "50");
+    assertStrictEquals(elements.lowCount.textContent, "5");
   });
 });
 
 Deno.test("updatePreviousDayDisplay", async (t) => {
-  await t.step("カウントを表示しコンテナを表示する", () => {
+  await t.step("カウントを表示する", () => {
     // Arrange
-    const mockContainer = { style: { display: "none" } } as HTMLElement;
-    const mockCountElement = { textContent: "" } as HTMLElement;
+    const elements = createMockPopupElements();
     const count = 25;
 
     // Act
-    updatePreviousDayDisplay(mockContainer, mockCountElement, count);
+    updatePreviousDayDisplay(
+      elements.previousDayContainer,
+      elements.previousDayLastCount,
+      count,
+    );
 
     // Assert
-    assertStrictEquals(mockCountElement.textContent, "25");
-    assertStrictEquals(mockContainer.style.display, "block");
+    assertStrictEquals(
+      elements.previousDayLastCount.textContent,
+      "25",
+    );
   });
 
-  await t.step("countが未定義の場合にコンテナを非表示にする", () => {
+  await t.step("countが未定義の場合に「データなし」を表示する", () => {
     // Arrange
-    const mockContainer = { style: { display: "block" } } as HTMLElement;
-    const mockCountElement = { textContent: "25" } as HTMLElement;
-
-    // Act
-    updatePreviousDayDisplay(mockContainer, mockCountElement, undefined);
-
-    // Assert
-    assertStrictEquals(mockContainer.style.display, "none");
-  });
-
-  await t.step("countがnullの場合にコンテナを非表示にする", () => {
-    // Arrange
-    const mockContainer = { style: { display: "block" } } as HTMLElement;
-    const mockCountElement = { textContent: "25" } as HTMLElement;
+    const elements = createMockPopupElements();
 
     // Act
     updatePreviousDayDisplay(
-      mockContainer,
-      mockCountElement,
+      elements.previousDayContainer,
+      elements.previousDayLastCount,
+      undefined,
+    );
+
+    // Assert
+    assertStrictEquals(
+      elements.previousDayLastCount.textContent,
+      "データなし",
+    );
+  });
+
+  await t.step("countがnullの場合に「データなし」を表示する", () => {
+    // Arrange
+    const elements = createMockPopupElements();
+
+    // Act
+    updatePreviousDayDisplay(
+      elements.previousDayContainer,
+      elements.previousDayLastCount,
       null as unknown as number,
     );
 
     // Assert
-    assertStrictEquals(mockContainer.style.display, "none");
+    assertStrictEquals(
+      elements.previousDayLastCount.textContent,
+      "データなし",
+    );
   });
 
   await t.step("containerがnullの場合に処理を行わない", () => {
     // Arrange
-    const mockCountElement = { textContent: "25" } as HTMLElement;
+    const elements = createMockPopupElements();
+    elements.previousDayLastCount.textContent = "25";
 
     // Act
-    const result = updatePreviousDayDisplay(null, mockCountElement, 30);
+    const result = updatePreviousDayDisplay(
+      null,
+      elements.previousDayLastCount,
+      30,
+    );
 
     // Assert
     assertStrictEquals(result, undefined);
-    assertStrictEquals(mockCountElement.textContent, "25");
+    assertStrictEquals(
+      elements.previousDayLastCount.textContent,
+      "25",
+    );
   });
 
   await t.step("countElementがnullの場合に処理を行わない", () => {
     // Arrange
-    const mockContainer = { style: { display: "none" } } as HTMLElement;
+    const elements = createMockPopupElements();
 
     // Act
-    const result = updatePreviousDayDisplay(mockContainer, null, 30);
+    const result = updatePreviousDayDisplay(
+      elements.previousDayContainer,
+      null,
+      30,
+    );
 
     // Assert
     assertStrictEquals(result, undefined);
-    assertStrictEquals(mockContainer.style.display, "none");
   });
 });
