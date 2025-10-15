@@ -3,7 +3,7 @@ import {
   chromeStub,
   createMockPopupElements,
   documentStub,
-} from "../testdoubles/testdoubles.ts";
+} from "./popup_test_helper.ts";
 import type { DailyStats } from "../domain/types.ts";
 
 const globalRecord = globalThis as Record<string, unknown>;

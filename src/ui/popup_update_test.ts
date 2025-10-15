@@ -3,7 +3,7 @@ import { StorageData } from "../domain/types.ts";
 import {
   createMockChromeStorage,
   createMockDocument,
-} from "../testdoubles/testdoubles.ts";
+} from "./popup_test_helper.ts";
 
 // グローバルモックを設定（importの前に必要）
 const globalRecord = globalThis as Record<string, unknown>;
