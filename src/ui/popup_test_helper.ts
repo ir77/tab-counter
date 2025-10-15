@@ -1,17 +1,8 @@
 import { DOMParser } from "deno-dom";
 
-export const chromeStub = {
-  storage: {
-    local: {
-      get: (_keys: string[], callback: (result: unknown) => void) => {
-        callback({} as unknown);
-      },
-    },
-    onChanged: {
-      addListener: () => {},
-    },
-  },
-};
+export const chromeStub = createMockChromeStorage((_keys, callback) => {
+  callback({} as unknown);
+});
 
 // カスタマイズ可能なモックChromeを作成する関数
 export function createMockChromeStorage<T>(
