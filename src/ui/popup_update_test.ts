@@ -1,7 +1,6 @@
 import { assertStrictEquals } from "assert/mod.ts";
 import { StorageData } from "../domain/types.ts";
 import {
-  chromeStub,
   createMockChromeStorage,
   createMockDocument,
 } from "./popup_test_helper.ts";
@@ -11,9 +10,6 @@ const globalRecord = globalThis as Record<string, unknown>;
 const documentMock = createMockDocument();
 const elements = documentMock._elements;
 globalRecord.document = documentMock;
-globalRecord.chrome = chromeStub;
-
-const { updateUI } = await import("./popup.ts");
 
 Deno.test.beforeEach(() => {
   // 要素の初期状態をリセット
@@ -21,6 +17,36 @@ Deno.test.beforeEach(() => {
   elements.highCount.textContent = "...";
   elements.lowCount.textContent = "...";
   elements.previousDayLastCount.textContent = "...";
+});
+
+Deno.test("test sample", async () => {
+  // const storageData: Partial<StorageData> = {
+  //   tabCount: 15,
+  //   dailyStats: { date: "2025-10-14", high: 20, low: 5 },
+  //   lastAvailablePreviousDayCount: 12,
+  // };
+
+  // const globalRecord = globalThis as Record<string, unknown>;
+  // globalRecord.chrome = createMockChromeStorage(
+  //   (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
+  //     callback(storageData);
+  //   },
+  // );
+
+  // const doc = createTestDocument();
+  // globalRecord.document = documentMock;
+
+  // console.log("start");
+
+  // const { updateUI } = await import("./popup.ts");
+
+  // console.log("imported");
+
+  // updateUI();
+
+  // console.log("UI updated");
+
+  // console.log(doc.getElementById("tabCount")?.textContent);
 });
 
 Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
@@ -39,6 +65,7 @@ Deno.test("updateUI - 全てのデータをストレージから読み込んで�
   );
 
   // Act
+  const { updateUI } = await import("./popup.ts");
   updateUI();
 
   // コールバックが実行されるまで待機
@@ -67,6 +94,7 @@ Deno.test("updateUI - tabCountのみが存在する場合に正しく表示す�
   );
 
   // Act
+  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
@@ -93,6 +121,7 @@ Deno.test("updateUI - dailyStatsのみが存在する場合に正しく表示す
   );
 
   // Act
+  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
@@ -122,6 +151,7 @@ Deno.test("updateUI - lastAvailablePreviousDayCountが存在する場合に前�
   );
 
   // Act
+  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
@@ -146,6 +176,7 @@ Deno.test("updateUI - ストレージが空の場合にプレースホルダー�
   );
 
   // Act
+  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 

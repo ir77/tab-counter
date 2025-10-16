@@ -1,6 +1,6 @@
 import { assertStrictEquals } from "assert/mod.ts";
 import {
-  chromeStub,
+  createMockChromeStorage,
   createMockPopupElements,
   documentStub,
 } from "./popup_test_helper.ts";
@@ -8,7 +8,9 @@ import type { DailyStats } from "../domain/types.ts";
 
 const globalRecord = globalThis as Record<string, unknown>;
 globalRecord.document = documentStub as unknown as Document;
-globalRecord.chrome = chromeStub as unknown;
+globalRecord.chrome = createMockChromeStorage((_keys, callback) => {
+  callback({} as unknown);
+});
 
 const {
   updateTabCountDisplay,
