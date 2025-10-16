@@ -9,15 +9,6 @@ var PopupElementId;
 function getPopupElement(id, doc = document) {
     return doc.getElementById(id);
 }
-function getPopupElements(doc = document) {
-    return {
-        tabCountElement: getPopupElement(PopupElementId.TabCount, doc),
-        highCountElement: getPopupElement(PopupElementId.HighCount, doc),
-        lowCountElement: getPopupElement(PopupElementId.LowCount, doc),
-        previousDayContainer: getPopupElement(PopupElementId.PreviousDayContainer, doc),
-        previousDayLastCountElement: getPopupElement(PopupElementId.PreviousDayLastCount, doc)
-    };
-}
 function updateTabCountDisplay(element, count) {
     if (!element) return;
     element.textContent = count !== undefined ? count.toString() : "...";
@@ -41,7 +32,11 @@ function updatePreviousDayDisplay(container, countElement, count) {
     }
 }
 function updateUI() {
-    const { tabCountElement, highCountElement, lowCountElement, previousDayContainer, previousDayLastCountElement } = getPopupElements();
+    const tabCountElement = getPopupElement(PopupElementId.TabCount);
+    const highCountElement = getPopupElement(PopupElementId.HighCount);
+    const lowCountElement = getPopupElement(PopupElementId.LowCount);
+    const previousDayContainer = getPopupElement(PopupElementId.PreviousDayContainer);
+    const previousDayLastCountElement = getPopupElement(PopupElementId.PreviousDayLastCount);
     chrome.storage.local.get([
         "tabCount",
         "dailyStats",
@@ -54,7 +49,11 @@ function updateUI() {
 }
 updateUI();
 chrome.storage.onChanged.addListener((changes, namespace)=>{
-    const { tabCountElement, highCountElement, lowCountElement, previousDayContainer, previousDayLastCountElement } = getPopupElements();
+    const tabCountElement = getPopupElement(PopupElementId.TabCount);
+    const highCountElement = getPopupElement(PopupElementId.HighCount);
+    const lowCountElement = getPopupElement(PopupElementId.LowCount);
+    const previousDayContainer = getPopupElement(PopupElementId.PreviousDayContainer);
+    const previousDayLastCountElement = getPopupElement(PopupElementId.PreviousDayLastCount);
     if (namespace === "local") {
         if (changes.tabCount) {
             updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
