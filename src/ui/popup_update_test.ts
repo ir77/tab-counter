@@ -1,6 +1,7 @@
 import { assertStrictEquals } from "assert/mod.ts";
 import { StorageData } from "../domain/types.ts";
 import {
+  chromeStub,
   createMockChromeStorage,
   createTestDocument,
   documentStub,
@@ -8,9 +9,7 @@ import {
 
 // グローバルモックを設定（importの前に必要）
 const globalRecord = globalThis as Record<string, unknown>;
-globalRecord.chrome = createMockChromeStorage((_keys, callback) => {
-  callback({} as unknown);
-});
+globalRecord.chrome = chromeStub;
 globalRecord.document = documentStub;
 const { updateUI } = await import("./popup.ts");
 

@@ -1,5 +1,9 @@
 import { DOMParser } from "deno-dom";
 
+export const chromeStub = createMockChromeStorage((_keys, callback) => {
+  callback({} as unknown);
+});
+
 // カスタマイズ可能なモックChromeを作成する関数
 export function createMockChromeStorage<T>(
   getData: (
