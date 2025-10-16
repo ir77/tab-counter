@@ -1,15 +1,6 @@
 /// <reference types="npm:@types/chrome" />
 import { DailyStats, StorageData } from "../domain/types.ts";
 
-// UI要素を取得
-const tabCountElement = document.getElementById("tabCount");
-const highCountElement = document.getElementById("highCount");
-const lowCountElement = document.getElementById("lowCount");
-const previousDayContainer = document.getElementById("previousDayContainer");
-const previousDayLastCountElement = document.getElementById(
-  "previousDayLastCount",
-);
-
 // ---- Helper Functions for UI Update ----
 
 export function updateTabCountDisplay(
@@ -55,6 +46,15 @@ export function updatePreviousDayDisplay(
 
 // ストレージから値を読み込んで表示する関数
 export function updateUI() {
+  // UI要素を取得
+  const tabCountElement = document.getElementById("tabCount");
+  const highCountElement = document.getElementById("highCount");
+  const lowCountElement = document.getElementById("lowCount");
+  const previousDayContainer = document.getElementById("previousDayContainer");
+  const previousDayLastCountElement = document.getElementById(
+    "previousDayLastCount",
+  );
+
   chrome.storage.local.get([
     "tabCount",
     "dailyStats",
@@ -83,6 +83,16 @@ chrome.storage.onChanged.addListener(
     changes: { [key: string]: chrome.storage.StorageChange },
     namespace: string,
   ) => {
+    const tabCountElement = document.getElementById("tabCount");
+    const highCountElement = document.getElementById("highCount");
+    const lowCountElement = document.getElementById("lowCount");
+    const previousDayContainer = document.getElementById(
+      "previousDayContainer",
+    );
+    const previousDayLastCountElement = document.getElementById(
+      "previousDayLastCount",
+    );
+
     if (namespace === "local") {
       if (changes.tabCount) {
         updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);

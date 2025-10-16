@@ -2,81 +2,44 @@ import { assertStrictEquals } from "assert/mod.ts";
 import { StorageData } from "../domain/types.ts";
 import {
   createMockChromeStorage,
-  createMockDocument,
+  createTestDocument,
+  documentStub,
 } from "./popup_test_helper.ts";
 
 // グローバルモックを設定（importの前に必要）
 const globalRecord = globalThis as Record<string, unknown>;
-const documentMock = createMockDocument();
-const elements = documentMock._elements;
-globalRecord.document = documentMock;
-
-Deno.test.beforeEach(() => {
-  // 要素の初期状態をリセット
-  elements.tabCount.textContent = "...";
-  elements.highCount.textContent = "...";
-  elements.lowCount.textContent = "...";
-  elements.previousDayLastCount.textContent = "...";
+globalRecord.chrome = createMockChromeStorage((_keys, callback) => {
+  callback({} as unknown);
 });
-
-Deno.test("test sample", async () => {
-  // const storageData: Partial<StorageData> = {
-  //   tabCount: 15,
-  //   dailyStats: { date: "2025-10-14", high: 20, low: 5 },
-  //   lastAvailablePreviousDayCount: 12,
-  // };
-
-  // const globalRecord = globalThis as Record<string, unknown>;
-  // globalRecord.chrome = createMockChromeStorage(
-  //   (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
-  //     callback(storageData);
-  //   },
-  // );
-
-  // const doc = createTestDocument();
-  // globalRecord.document = documentMock;
-
-  // console.log("start");
-
-  // const { updateUI } = await import("./popup.ts");
-
-  // console.log("imported");
-
-  // updateUI();
-
-  // console.log("UI updated");
-
-  // console.log(doc.getElementById("tabCount")?.textContent);
-});
+globalRecord.document = documentStub;
+const { updateUI } = await import("./popup.ts");
 
 Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
-  // Arrange
+  // arrange
   const storageData: Partial<StorageData> = {
     tabCount: 15,
     dailyStats: { date: "2025-10-14", high: 20, low: 5 },
     lastAvailablePreviousDayCount: 12,
   };
-
+  const globalRecord = globalThis as Record<string, unknown>;
   globalRecord.chrome = createMockChromeStorage(
     (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
-      // コールバックを非同期的に実行してChrome APIの動作を模倣
-      setTimeout(() => callback(storageData), 0);
+      callback(storageData);
     },
   );
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
-  // Act
-  const { updateUI } = await import("./popup.ts");
+  // act
   updateUI();
-
-  // コールバックが実行されるまで待機
   await new Promise((resolve) => setTimeout(resolve, 10));
 
-  // Assert
-  assertStrictEquals(elements.tabCount.textContent, "15");
-  assertStrictEquals(elements.highCount.textContent, "20");
-  assertStrictEquals(elements.lowCount.textContent, "5");
+  // assert
+  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "15");
+  assertStrictEquals(doc.getElementById("highCount")?.textContent, "20");
+  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "5");
   assertStrictEquals(
-    elements.previousDayLastCount.textContent,
+    doc.getElementById("previousDayLastCount")?.textContent,
     "12",
   );
 });
@@ -92,18 +55,19 @@ Deno.test("updateUI - tabCountのみが存在する場合に正しく表示す�
       setTimeout(() => callback(storageData), 0);
     },
   );
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
   // Act
-  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(elements.tabCount.textContent, "8");
-  assertStrictEquals(elements.highCount.textContent, "...");
-  assertStrictEquals(elements.lowCount.textContent, "...");
+  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "8");
+  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    elements.previousDayLastCount.textContent,
+    doc.getElementById("previousDayLastCount")?.textContent,
     "データなし",
   );
 });
@@ -119,18 +83,19 @@ Deno.test("updateUI - dailyStatsのみが存在する場合に正しく表示す
       setTimeout(() => callback(storageData), 0);
     },
   );
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
   // Act
-  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(elements.tabCount.textContent, "...");
-  assertStrictEquals(elements.highCount.textContent, "30");
-  assertStrictEquals(elements.lowCount.textContent, "10");
+  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("highCount")?.textContent, "30");
+  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "10");
   assertStrictEquals(
-    elements.previousDayLastCount.textContent,
+    doc.getElementById("previousDayLastCount")?.textContent,
     "データなし",
   );
 });
@@ -149,18 +114,19 @@ Deno.test("updateUI - lastAvailablePreviousDayCountが存在する場合に前�
       setTimeout(() => callback(storageData), 0);
     },
   );
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
   // Act
-  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(elements.tabCount.textContent, "...");
-  assertStrictEquals(elements.highCount.textContent, "...");
-  assertStrictEquals(elements.lowCount.textContent, "...");
+  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    elements.previousDayLastCount.textContent,
+    doc.getElementById("previousDayLastCount")?.textContent,
     "18",
   );
 });
@@ -174,18 +140,19 @@ Deno.test("updateUI - ストレージが空の場合にプレースホルダー�
       setTimeout(() => callback(storageData), 0);
     },
   );
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
   // Act
-  const { updateUI } = await import("./popup.ts");
   updateUI();
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(elements.tabCount.textContent, "...");
-  assertStrictEquals(elements.highCount.textContent, "...");
-  assertStrictEquals(elements.lowCount.textContent, "...");
+  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
+  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    elements.previousDayLastCount.textContent,
+    doc.getElementById("previousDayLastCount")?.textContent,
     "データなし",
   );
 });

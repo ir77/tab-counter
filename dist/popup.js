@@ -1,8 +1,3 @@
-const tabCountElement = document.getElementById("tabCount");
-const highCountElement = document.getElementById("highCount");
-const lowCountElement = document.getElementById("lowCount");
-const previousDayContainer = document.getElementById("previousDayContainer");
-const previousDayLastCountElement = document.getElementById("previousDayLastCount");
 function updateTabCountDisplay(element, count) {
     if (!element) return;
     element.textContent = count !== undefined ? count.toString() : "...";
@@ -26,6 +21,11 @@ function updatePreviousDayDisplay(container, countElement, count) {
     }
 }
 function updateUI() {
+    const tabCountElement = document.getElementById("tabCount");
+    const highCountElement = document.getElementById("highCount");
+    const lowCountElement = document.getElementById("lowCount");
+    const previousDayContainer = document.getElementById("previousDayContainer");
+    const previousDayLastCountElement = document.getElementById("previousDayLastCount");
     chrome.storage.local.get([
         "tabCount",
         "dailyStats",
@@ -38,6 +38,11 @@ function updateUI() {
 }
 updateUI();
 chrome.storage.onChanged.addListener((changes, namespace)=>{
+    const tabCountElement = document.getElementById("tabCount");
+    const highCountElement = document.getElementById("highCount");
+    const lowCountElement = document.getElementById("lowCount");
+    const previousDayContainer = document.getElementById("previousDayContainer");
+    const previousDayLastCountElement = document.getElementById("previousDayLastCount");
     if (namespace === "local") {
         if (changes.tabCount) {
             updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
