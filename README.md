@@ -42,14 +42,7 @@ deno task build
 #### **テストの拡充 (Test Expansion)**
 
 - [ ] **`popup.ts` の単体テスト**
-  - [ ] `popup_test.ts` のセットアップ
-    - [ ] DOM APIのモック 
-    - [ ] DOM操作部分の純粋関数化
-    - [ ] `chrome.storage` API のモック
-  - [ ] UI更新関数 (`updateTabCountDisplay` 等) のテストケースを追加する
-- [ ] **E2E (UI) テスト**
-  - [ ] E2Eテストフレームワーク (Playwright等) の導入と設定
-  - [ ] ポップアップ表示を確認する基本的なUIテスト (`ui_test.ts`) を作成する
+  - [ ] `chrome.storage.onChanged.addListener` のユニットテスト
 
 #### **拡張機能アイコンの追加 (Add Extension Icon)**
 
