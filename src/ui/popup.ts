@@ -70,7 +70,10 @@ export function updateUI() {
     "dailyStats",
     "lastAvailablePreviousDayCount",
   ], (result: StorageData) => {
-    updateTabCountDisplay(getPopupElement(PopupElementId.TabCount), result.tabCount);
+    updateTabCountDisplay(
+      getPopupElement(PopupElementId.TabCount),
+      result.tabCount,
+    );
     updateDailyStatsDisplay(
       getPopupElement(PopupElementId.HighCount),
       getPopupElement(PopupElementId.LowCount),
@@ -78,8 +81,8 @@ export function updateUI() {
     );
     updatePreviousDayDisplay(
       getPopupElement(
-    PopupElementId.PreviousDayContainer,
-  ),
+        PopupElementId.PreviousDayContainer,
+      ),
       getPopupElement(PopupElementId.PreviousDayLastCount),
       result.lastAvailablePreviousDayCount,
     );
@@ -98,7 +101,8 @@ chrome.storage.onChanged.addListener(
     if (namespace === "local") {
       if (changes.tabCount) {
         updateTabCountDisplay(
-          getPopupElement(PopupElementId.TabCount), changes.tabCount.newValue
+          getPopupElement(PopupElementId.TabCount),
+          changes.tabCount.newValue,
         );
       }
       if (changes.dailyStats) {

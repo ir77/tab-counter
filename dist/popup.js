@@ -32,37 +32,27 @@ function updatePreviousDayDisplay(container, countElement, count) {
     }
 }
 function updateUI() {
-    const tabCountElement = getPopupElement(PopupElementId.TabCount);
-    const highCountElement = getPopupElement(PopupElementId.HighCount);
-    const lowCountElement = getPopupElement(PopupElementId.LowCount);
-    const previousDayContainer = getPopupElement(PopupElementId.PreviousDayContainer);
-    const previousDayLastCountElement = getPopupElement(PopupElementId.PreviousDayLastCount);
     chrome.storage.local.get([
         "tabCount",
         "dailyStats",
         "lastAvailablePreviousDayCount"
     ], (result)=>{
-        updateTabCountDisplay(tabCountElement, result.tabCount);
-        updateDailyStatsDisplay(highCountElement, lowCountElement, result.dailyStats);
-        updatePreviousDayDisplay(previousDayContainer, previousDayLastCountElement, result.lastAvailablePreviousDayCount);
+        updateTabCountDisplay(getPopupElement(PopupElementId.TabCount), result.tabCount);
+        updateDailyStatsDisplay(getPopupElement(PopupElementId.HighCount), getPopupElement(PopupElementId.LowCount), result.dailyStats);
+        updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), result.lastAvailablePreviousDayCount);
     });
 }
 updateUI();
 chrome.storage.onChanged.addListener((changes, namespace)=>{
-    const tabCountElement = getPopupElement(PopupElementId.TabCount);
-    const highCountElement = getPopupElement(PopupElementId.HighCount);
-    const lowCountElement = getPopupElement(PopupElementId.LowCount);
-    const previousDayContainer = getPopupElement(PopupElementId.PreviousDayContainer);
-    const previousDayLastCountElement = getPopupElement(PopupElementId.PreviousDayLastCount);
     if (namespace === "local") {
         if (changes.tabCount) {
-            updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
+            updateTabCountDisplay(getPopupElement(PopupElementId.TabCount), changes.tabCount.newValue);
         }
         if (changes.dailyStats) {
-            updateDailyStatsDisplay(highCountElement, lowCountElement, changes.dailyStats.newValue);
+            updateDailyStatsDisplay(getPopupElement(PopupElementId.HighCount), getPopupElement(PopupElementId.LowCount), changes.dailyStats.newValue);
         }
         if (changes.lastAvailablePreviousDayCount) {
-            updatePreviousDayDisplay(previousDayContainer, previousDayLastCountElement, changes.lastAvailablePreviousDayCount.newValue);
+            updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), changes.lastAvailablePreviousDayCount.newValue);
         }
     }
 });

@@ -204,3 +204,29 @@ Deno.test("updateUI - ストレージが空の場合にプレースホルダー�
     "データなし",
   );
 });
+
+Deno.test("updateUI - DOM要素が存在しない場合でもエラーにならない", async () => {
+  // Arrange
+  const storageData: Partial<StorageData> = {
+    tabCount: 10,
+    dailyStats: { date: "2025-10-14", high: 20, low: 5 },
+    lastAvailablePreviousDayCount: 8,
+  };
+
+  globalRecord.chrome = createMockChromeStorage(
+    (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
+      setTimeout(() => callback(storageData), 0);
+    },
+  );
+
+  // DOM要素が存在しないドキュメントを作成
+  const doc = {
+    getElementById: (_id: string) => null,
+  };
+  globalRecord.document = doc;
+
+  // Act & Assert - エラーが発生しないことを確認
+  updateUI();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  // エラーなく完了すればOK
+});
