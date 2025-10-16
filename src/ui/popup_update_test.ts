@@ -3,7 +3,7 @@ import { StorageData } from "../domain/types.ts";
 import { DOMParser } from "deno-dom";
 
 // カスタマイズ可能なモックChromeを作成する関数
-export function createMockChromeStorage<T>(
+function createMockChromeStorage<T>(
   getData: (
     keys: string[],
     callback: (result: T) => void,
@@ -22,7 +22,7 @@ export function createMockChromeStorage<T>(
 }
 
 // 実際のHTMLファイルから要素を作成するヘルパー関数
-export function createTestDocument() {
+function createTestDocument() {
   const htmlPath = new URL("../ui/popup.html", import.meta.url);
   const htmlContent = Deno.readTextFileSync(htmlPath);
   return new DOMParser().parseFromString(htmlContent, "text/html")!;
