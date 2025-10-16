@@ -65,31 +65,22 @@ export function updatePreviousDayDisplay(
 
 // ストレージから値を読み込んで表示する関数
 export function updateUI() {
-  // UI要素を取得
-  const tabCountElement = getPopupElement(PopupElementId.TabCount);
-  const highCountElement = getPopupElement(PopupElementId.HighCount);
-  const lowCountElement = getPopupElement(PopupElementId.LowCount);
-  const previousDayContainer = getPopupElement(
-    PopupElementId.PreviousDayContainer,
-  );
-  const previousDayLastCountElement = getPopupElement(
-    PopupElementId.PreviousDayLastCount,
-  );
-
   chrome.storage.local.get([
     "tabCount",
     "dailyStats",
     "lastAvailablePreviousDayCount",
   ], (result: StorageData) => {
-    updateTabCountDisplay(tabCountElement, result.tabCount);
+    updateTabCountDisplay(getPopupElement(PopupElementId.TabCount), result.tabCount);
     updateDailyStatsDisplay(
-      highCountElement,
-      lowCountElement,
+      getPopupElement(PopupElementId.HighCount),
+      getPopupElement(PopupElementId.LowCount),
       result.dailyStats,
     );
     updatePreviousDayDisplay(
-      previousDayContainer,
-      previousDayLastCountElement,
+      getPopupElement(
+    PopupElementId.PreviousDayContainer,
+  ),
+      getPopupElement(PopupElementId.PreviousDayLastCount),
       result.lastAvailablePreviousDayCount,
     );
   });
@@ -104,31 +95,23 @@ chrome.storage.onChanged.addListener(
     changes: { [key: string]: chrome.storage.StorageChange },
     namespace: string,
   ) => {
-    const tabCountElement = getPopupElement(PopupElementId.TabCount);
-    const highCountElement = getPopupElement(PopupElementId.HighCount);
-    const lowCountElement = getPopupElement(PopupElementId.LowCount);
-    const previousDayContainer = getPopupElement(
-      PopupElementId.PreviousDayContainer,
-    );
-    const previousDayLastCountElement = getPopupElement(
-      PopupElementId.PreviousDayLastCount,
-    );
-
     if (namespace === "local") {
       if (changes.tabCount) {
-        updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
+        updateTabCountDisplay(
+          getPopupElement(PopupElementId.TabCount), changes.tabCount.newValue
+        );
       }
       if (changes.dailyStats) {
         updateDailyStatsDisplay(
-          highCountElement,
-          lowCountElement,
+          getPopupElement(PopupElementId.HighCount),
+          getPopupElement(PopupElementId.LowCount),
           changes.dailyStats.newValue,
         );
       }
       if (changes.lastAvailablePreviousDayCount) {
         updatePreviousDayDisplay(
-          previousDayContainer,
-          previousDayLastCountElement,
+          getPopupElement(PopupElementId.PreviousDayContainer),
+          getPopupElement(PopupElementId.PreviousDayLastCount),
           changes.lastAvailablePreviousDayCount.newValue,
         );
       }
