@@ -1,16 +1,41 @@
 import { assertStrictEquals } from "assert/mod.ts";
 import { StorageData } from "../domain/types.ts";
-import {
-  chromeStub,
-  createMockChromeStorage,
-  createTestDocument,
-  documentStub,
-} from "./popup_test_helper.ts";
+import { DOMParser } from "deno-dom";
+
+// カスタマイズ可能なモックChromeを作成する関数
+export function createMockChromeStorage<T>(
+  getData: (
+    keys: string[],
+    callback: (result: T) => void,
+  ) => void,
+) {
+  return {
+    storage: {
+      local: {
+        get: getData,
+      },
+      onChanged: {
+        addListener: () => {},
+      },
+    },
+  };
+}
+
+// 実際のHTMLファイルから要素を作成するヘルパー関数
+export function createTestDocument() {
+  const htmlPath = new URL("../ui/popup.html", import.meta.url);
+  const htmlContent = Deno.readTextFileSync(htmlPath);
+  return new DOMParser().parseFromString(htmlContent, "text/html")!;
+}
 
 // グローバルモックを設定（importの前に必要）
 const globalRecord = globalThis as Record<string, unknown>;
-globalRecord.chrome = chromeStub;
-globalRecord.document = documentStub;
+globalRecord.chrome = createMockChromeStorage((_keys, callback) => {
+  callback({} as unknown);
+});
+globalRecord.document = {
+  getElementById: (_id: string) => null,
+};
 const {
   updateUI,
   getPopupElement,
