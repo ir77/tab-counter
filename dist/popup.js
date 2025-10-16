@@ -1,3 +1,23 @@
+var PopupElementId;
+(function(PopupElementId) {
+    PopupElementId["TabCount"] = "tabCount";
+    PopupElementId["HighCount"] = "highCount";
+    PopupElementId["LowCount"] = "lowCount";
+    PopupElementId["PreviousDayContainer"] = "previousDayContainer";
+    PopupElementId["PreviousDayLastCount"] = "previousDayLastCount";
+})(PopupElementId || (PopupElementId = {}));
+function getPopupElement(id, doc = document) {
+    return doc.getElementById(id);
+}
+function getPopupElements(doc = document) {
+    return {
+        tabCountElement: getPopupElement(PopupElementId.TabCount, doc),
+        highCountElement: getPopupElement(PopupElementId.HighCount, doc),
+        lowCountElement: getPopupElement(PopupElementId.LowCount, doc),
+        previousDayContainer: getPopupElement(PopupElementId.PreviousDayContainer, doc),
+        previousDayLastCountElement: getPopupElement(PopupElementId.PreviousDayLastCount, doc)
+    };
+}
 function updateTabCountDisplay(element, count) {
     if (!element) return;
     element.textContent = count !== undefined ? count.toString() : "...";
@@ -21,11 +41,7 @@ function updatePreviousDayDisplay(container, countElement, count) {
     }
 }
 function updateUI() {
-    const tabCountElement = document.getElementById("tabCount");
-    const highCountElement = document.getElementById("highCount");
-    const lowCountElement = document.getElementById("lowCount");
-    const previousDayContainer = document.getElementById("previousDayContainer");
-    const previousDayLastCountElement = document.getElementById("previousDayLastCount");
+    const { tabCountElement, highCountElement, lowCountElement, previousDayContainer, previousDayLastCountElement } = getPopupElements();
     chrome.storage.local.get([
         "tabCount",
         "dailyStats",
@@ -38,11 +54,7 @@ function updateUI() {
 }
 updateUI();
 chrome.storage.onChanged.addListener((changes, namespace)=>{
-    const tabCountElement = document.getElementById("tabCount");
-    const highCountElement = document.getElementById("highCount");
-    const lowCountElement = document.getElementById("lowCount");
-    const previousDayContainer = document.getElementById("previousDayContainer");
-    const previousDayLastCountElement = document.getElementById("previousDayLastCount");
+    const { tabCountElement, highCountElement, lowCountElement, previousDayContainer, previousDayLastCountElement } = getPopupElements();
     if (namespace === "local") {
         if (changes.tabCount) {
             updateTabCountDisplay(tabCountElement, changes.tabCount.newValue);
@@ -55,6 +67,8 @@ chrome.storage.onChanged.addListener((changes, namespace)=>{
         }
     }
 });
+export { PopupElementId as PopupElementId };
+export { getPopupElement as getPopupElement };
 export { updateTabCountDisplay as updateTabCountDisplay };
 export { updateDailyStatsDisplay as updateDailyStatsDisplay };
 export { updatePreviousDayDisplay as updatePreviousDayDisplay };

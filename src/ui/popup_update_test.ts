@@ -11,7 +11,11 @@ import {
 const globalRecord = globalThis as Record<string, unknown>;
 globalRecord.chrome = chromeStub;
 globalRecord.document = documentStub;
-const { updateUI } = await import("./popup.ts");
+const {
+  updateUI,
+  getPopupElement,
+  PopupElementId,
+} = await import("./popup.ts");
 
 Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
   // arrange
@@ -34,11 +38,20 @@ Deno.test("updateUI - 全てのデータをストレージから読み込んで�
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // assert
-  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "15");
-  assertStrictEquals(doc.getElementById("highCount")?.textContent, "20");
-  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "5");
   assertStrictEquals(
-    doc.getElementById("previousDayLastCount")?.textContent,
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "15",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "20",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "5",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
     "12",
   );
 });
@@ -62,11 +75,20 @@ Deno.test("updateUI - tabCountのみが存在する場合に正しく表示す�
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "8");
-  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    doc.getElementById("previousDayLastCount")?.textContent,
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "8",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
     "データなし",
   );
 });
@@ -90,11 +112,20 @@ Deno.test("updateUI - dailyStatsのみが存在する場合に正しく表示す
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("highCount")?.textContent, "30");
-  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "10");
   assertStrictEquals(
-    doc.getElementById("previousDayLastCount")?.textContent,
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "30",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "10",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
     "データなし",
   );
 });
@@ -121,11 +152,20 @@ Deno.test("updateUI - lastAvailablePreviousDayCountが存在する場合に前�
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    doc.getElementById("previousDayLastCount")?.textContent,
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
     "18",
   );
 });
@@ -147,11 +187,20 @@ Deno.test("updateUI - ストレージが空の場合にプレースホルダー�
   await new Promise((resolve) => setTimeout(resolve, 10));
 
   // Assert
-  assertStrictEquals(doc.getElementById("tabCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("highCount")?.textContent, "...");
-  assertStrictEquals(doc.getElementById("lowCount")?.textContent, "...");
   assertStrictEquals(
-    doc.getElementById("previousDayLastCount")?.textContent,
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
     "データなし",
   );
 });

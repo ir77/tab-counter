@@ -1,6 +1,41 @@
 /// <reference types="npm:@types/chrome" />
 import { DailyStats, StorageData } from "../domain/types.ts";
 
+type PopupDocument = {
+  getElementById(id: string): unknown;
+};
+
+export enum PopupElementId {
+  TabCount = "tabCount",
+  HighCount = "highCount",
+  LowCount = "lowCount",
+  PreviousDayContainer = "previousDayContainer",
+  PreviousDayLastCount = "previousDayLastCount",
+}
+
+export function getPopupElement(
+  id: PopupElementId,
+  doc: PopupDocument = document as PopupDocument,
+): HTMLElement | null {
+  return doc.getElementById(id) as HTMLElement | null;
+}
+
+function getPopupElements(doc: PopupDocument = document as PopupDocument) {
+  return {
+    tabCountElement: getPopupElement(PopupElementId.TabCount, doc),
+    highCountElement: getPopupElement(PopupElementId.HighCount, doc),
+    lowCountElement: getPopupElement(PopupElementId.LowCount, doc),
+    previousDayContainer: getPopupElement(
+      PopupElementId.PreviousDayContainer,
+      doc,
+    ),
+    previousDayLastCountElement: getPopupElement(
+      PopupElementId.PreviousDayLastCount,
+      doc,
+    ),
+  };
+}
+
 // ---- Helper Functions for UI Update ----
 
 export function updateTabCountDisplay(
@@ -47,13 +82,13 @@ export function updatePreviousDayDisplay(
 // ストレージから値を読み込んで表示する関数
 export function updateUI() {
   // UI要素を取得
-  const tabCountElement = document.getElementById("tabCount");
-  const highCountElement = document.getElementById("highCount");
-  const lowCountElement = document.getElementById("lowCount");
-  const previousDayContainer = document.getElementById("previousDayContainer");
-  const previousDayLastCountElement = document.getElementById(
-    "previousDayLastCount",
-  );
+  const {
+    tabCountElement,
+    highCountElement,
+    lowCountElement,
+    previousDayContainer,
+    previousDayLastCountElement,
+  } = getPopupElements();
 
   chrome.storage.local.get([
     "tabCount",
@@ -83,15 +118,13 @@ chrome.storage.onChanged.addListener(
     changes: { [key: string]: chrome.storage.StorageChange },
     namespace: string,
   ) => {
-    const tabCountElement = document.getElementById("tabCount");
-    const highCountElement = document.getElementById("highCount");
-    const lowCountElement = document.getElementById("lowCount");
-    const previousDayContainer = document.getElementById(
-      "previousDayContainer",
-    );
-    const previousDayLastCountElement = document.getElementById(
-      "previousDayLastCount",
-    );
+    const {
+      tabCountElement,
+      highCountElement,
+      lowCountElement,
+      previousDayContainer,
+      previousDayLastCountElement,
+    } = getPopupElements();
 
     if (namespace === "local") {
       if (changes.tabCount) {
