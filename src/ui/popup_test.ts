@@ -2,6 +2,9 @@ import { assertStrictEquals } from "assert/mod.ts";
 import { StorageData } from "../domain/types.ts";
 import { DOMParser } from "deno-dom";
 
+// テスト用の定数
+const TEST_DELAY_MS = 5;
+
 // Chrome ストレージ変更の型定義
 type StorageChanges = Record<
   string,
@@ -103,7 +106,7 @@ Deno.test("onChanged - tabCount の変更でタブ数表示が更新される", 
 
   // 初期表示（…）にしておく
   updateUI();
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
   // Act: tabCount の変更イベントを発火
   chromeMock.triggerOnChanged({
@@ -111,7 +114,7 @@ Deno.test("onChanged - tabCount の変更でタブ数表示が更新される", 
   }, "local");
 
   // 少し待つ（更新は同期だが DOM 操作のタイミング確保）
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
   // Assert
   assertStrictEquals(
@@ -132,7 +135,7 @@ Deno.test("onChanged - dailyStats の変更で high/low が更新される", asy
     },
   }, "local");
 
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
   assertStrictEquals(
     getPopupElement(PopupElementId.HighCount, doc)?.textContent,
@@ -155,7 +158,7 @@ Deno.test(
       lastAvailablePreviousDayCount: { oldValue: null, newValue: 123 },
     }, "local");
 
-    await new Promise((r) => setTimeout(r, 5));
+    await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
     assertStrictEquals(
       getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
@@ -178,7 +181,7 @@ Deno.test("onChanged - 複数フィールドの同時変更で全て更新され
     lastAvailablePreviousDayCount: { oldValue: null, newValue: 7 },
   }, "local");
 
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
   assertStrictEquals(
     getPopupElement(PopupElementId.TabCount, doc)?.textContent,
@@ -208,7 +211,7 @@ Deno.test("onChanged - namespace が local でない場合は更新されない"
     (_keys, cb) => cb({ tabCount: 11 } as Partial<StorageData>),
   );
   updateUI();
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
   assertStrictEquals(
     getPopupElement(PopupElementId.TabCount, doc)?.textContent,
     "11",
@@ -219,7 +222,7 @@ Deno.test("onChanged - namespace が local でない場合は更新されない"
     tabCount: { oldValue: 11, newValue: 88 },
   }, "sync");
 
-  await new Promise((r) => setTimeout(r, 5));
+  await new Promise((r) => setTimeout(r, TEST_DELAY_MS));
 
   // Assert: 値は変わらない
   assertStrictEquals(
