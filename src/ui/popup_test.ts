@@ -68,13 +68,14 @@ const defaultStorageGet: ChromeStorageGet<StorageData> = (
 const mockChrome = createMockChromeStorage(defaultStorageGet);
 globalRecord.chrome = mockChrome;
 globalRecord.document = { getElementById: (_id: string) => null };
+
 const {
   updateUI,
   getPopupElement,
   PopupElementId,
 } = await import("./popup.ts");
 
-function resetChromeLocalGet(getImpl: ChromeStorageGet<StorageData>) {
+function setChromeLocalGet(getImpl: ChromeStorageGet<StorageData>) {
   mockChrome.storage.local.get = getImpl;
 }
 
@@ -93,7 +94,7 @@ Deno.test("updateUI - ストレージのデータを表示に反映する", asyn
     dailyStats: { date: "2025-10-14", high: 20, low: 5 },
     lastPreviousDayCount: 12,
   };
-  resetChromeLocalGet((_, callback) => {
+  setChromeLocalGet((_, callback) => {
     callback(storageData);
   });
   const doc = createTestDocument();
@@ -126,7 +127,7 @@ Deno.test("updateUI - 空ストレージのデータはプレースホルダー�
   // Arrange
   const storageData: StorageData = {};
 
-  resetChromeLocalGet((_, callback) => {
+  setChromeLocalGet((_, callback) => {
     setTimeout(() => callback(storageData), 0);
   });
   const doc = createTestDocument();
