@@ -67,9 +67,10 @@ const defaultStorageGet: ChromeStorageGet<StorageData> = (
 };
 const mockChrome = createMockChromeStorage(defaultStorageGet);
 globalRecord.chrome = mockChrome;
-globalRecord.document = {
+const placeholderDocument = {
   getElementById: (_id: string) => null,
 };
+globalRecord.document = placeholderDocument;
 const {
   updateUI,
   getPopupElement,
@@ -88,171 +89,169 @@ function getStorageChangeListener(): StorageChangeListener {
   return listener;
 }
 
-Deno.test("updateUI", async (t) => {
-  await t.step("ストレージのデータを表示に反映する", async () => {
-    // arrange
-    const storageData: StorageData = {
-      tabCount: 15,
-      dailyStats: { date: "2025-10-14", high: 20, low: 5 },
-      lastPreviousDayCount: 12,
-    };
-    resetChromeLocalGet((_, callback) => {
-      callback(storageData);
-    });
-    const doc = createTestDocument();
-    globalRecord.document = doc;
-
-    try {
-      // act
-      updateUI();
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      // assert
-      assertStrictEquals(
-        getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-        "15",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-        "20",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-        "5",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-        "12",
-      );
-    } finally {
-      resetChromeLocalGet(defaultStorageGet);
-    }
-  });
-
-  await t.step("空ストレージのデータはプレースホルダーを表示する", async () => {
-    // Arrange
-    const storageData: StorageData = {};
-
-    resetChromeLocalGet((_, callback) => {
-      setTimeout(() => callback(storageData), 0);
-    });
-    const doc = createTestDocument();
-    globalRecord.document = doc;
-
-    try {
-      // Act
-      updateUI();
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      // Assert
-      assertStrictEquals(
-        getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-        "...",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-        "...",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-        "...",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-        "データなし",
-      );
-    } finally {
-      resetChromeLocalGet(defaultStorageGet);
-    }
-  });
+Deno.test.beforeEach(() => {
+  globalRecord.document = placeholderDocument;
+  resetChromeLocalGet(defaultStorageGet);
 });
 
-Deno.test("chrome.storage.onChanged.addListener", async (t) => {
-  await t.step("changes.tabCount - tabCountを更新", () => {
-    const listener = getStorageChangeListener();
-    const doc = createTestDocument();
-    globalRecord.document = doc;
+Deno.test.afterEach(() => {
+  globalRecord.document = placeholderDocument;
+  resetChromeLocalGet(defaultStorageGet);
+});
 
-    listener({
-      tabCount: { newValue: 42 },
-    }, "local");
-
-    assertStrictEquals(
-      getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-      "42",
-    );
-    assertStrictEquals(
-      getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-      "...",
-    );
-    assertStrictEquals(
-      getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-      "...",
-    );
-    assertStrictEquals(
-      getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-      "...",
-    );
+Deno.test("updateUI - ストレージのデータを表示に反映する", async () => {
+  // arrange
+  const storageData: StorageData = {
+    tabCount: 15,
+    dailyStats: { date: "2025-10-14", high: 20, low: 5 },
+    lastPreviousDayCount: 12,
+  };
+  resetChromeLocalGet((_, callback) => {
+    callback(storageData);
   });
+  const doc = createTestDocument();
+  globalRecord.document = doc;
 
-  await t.step("changes.dailyStats - dailyStatsを更新", () => {
+  // act
+  updateUI();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+
+  // assert
+  assertStrictEquals(
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "15",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "20",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "5",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+    "12",
+  );
+});
+
+Deno.test("updateUI - 空ストレージのデータはプレースホルダーを表示する", async () => {
+  // Arrange
+  const storageData: StorageData = {};
+
+  resetChromeLocalGet((_, callback) => {
+    setTimeout(() => callback(storageData), 0);
+  });
+  const doc = createTestDocument();
+  globalRecord.document = doc;
+
+  // Act
+  updateUI();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+
+  // Assert
+  assertStrictEquals(
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+    "データなし",
+  );
+});
+
+Deno.test("chrome.storage.onChanged.addListener - changes.tabCount", () => {
+  const listener = getStorageChangeListener();
+  const doc = createTestDocument();
+  globalRecord.document = doc;
+
+  listener({
+    tabCount: { newValue: 42 },
+  }, "local");
+
+  assertStrictEquals(
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "42",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+    "...",
+  );
+});
+
+Deno.test("chrome.storage.onChanged.addListener - changes.dailyStats", () => {
+  const listener = getStorageChangeListener();
+  const doc = createTestDocument();
+  globalRecord.document = doc;
+
+  listener({
+    dailyStats: {
+      newValue: { date: "2025-10-18", high: 7, low: 3 },
+    },
+  }, "local");
+
+  assertStrictEquals(
+    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+    "7",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+    "3",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+    "...",
+  );
+  assertStrictEquals(
+    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+    "...",
+  );
+});
+
+Deno.test(
+  "chrome.storage.onChanged.addListener - changes.lastPreviousDayCount",
+  () => {
     const listener = getStorageChangeListener();
     const doc = createTestDocument();
     globalRecord.document = doc;
 
     listener({
-      dailyStats: {
-        newValue: { date: "2025-10-18", high: 7, low: 3 },
+      lastPreviousDayCount: {
+        newValue: 11,
       },
     }, "local");
 
     assertStrictEquals(
-      getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-      "7",
-    );
-    assertStrictEquals(
-      getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-      "3",
+      getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+      "11",
     );
     assertStrictEquals(
       getPopupElement(PopupElementId.TabCount, doc)?.textContent,
       "...",
     );
     assertStrictEquals(
-      getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+      getPopupElement(PopupElementId.HighCount, doc)?.textContent,
       "...",
     );
-  });
-
-  await t.step(
-    "changes.lastPreviousDayCount - lastPreviousDayCount",
-    () => {
-      const listener = getStorageChangeListener();
-      const doc = createTestDocument();
-      globalRecord.document = doc;
-
-      listener({
-        lastPreviousDayCount: {
-          newValue: 11,
-        },
-      }, "local");
-
-      assertStrictEquals(
-        getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-        "11",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-        "...",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-        "...",
-      );
-      assertStrictEquals(
-        getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-        "...",
-      );
-    },
-  );
-});
+    assertStrictEquals(
+      getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+      "...",
+    );
+  },
+);
