@@ -4,34 +4,17 @@ import type { DailyStats } from "./types.ts";
 import { determineBadgeColor } from "./badge_color.ts";
 
 function withFixedDate<T>(isoDate: string, fn: () => T): T {
-  const realDate = Date;
-  const fixedTime = new Date(isoDate).getTime();
-
-  class FixedDate extends Date {
-    constructor(value?: number | string | Date) {
-      super(value ?? fixedTime);
-    }
-
-    static override now(): number {
-      return fixedTime;
-    }
-  }
-
-  FixedDate.parse = realDate.parse;
-  FixedDate.UTC = realDate.UTC;
-  (globalThis as Record<string, unknown>).Date = FixedDate;
+  const fakeTime = new FakeTime(isoDate);
 
   try {
     return fn();
   } finally {
-    (globalThis as Record<string, unknown>).Date = realDate;
+    fakeTime.restore();
   }
 }
 
 Deno.test("determineBadgeColorはタブ数が少ない場合に緑を返す", () => {
-  const fakeTime = new FakeTime("2025-10-02T09:00:00Z");
-
-  try {
+  withFixedDate("2025-10-02T09:00:00Z", () => {
     // Arrange
     const tabCount = 4;
 
@@ -40,9 +23,7 @@ Deno.test("determineBadgeColorはタブ数が少ない場合に緑を返す", ()
 
     // Assert
     assertStrictEquals(color, "green");
-  } finally {
-    fakeTime.restore();
-  }
+  });
 });
 
 Deno.test("determineBadgeColorは前日基準を優先して緑を返す", () => {
