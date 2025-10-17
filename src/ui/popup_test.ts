@@ -42,76 +42,95 @@ const {
   PopupElementId,
 } = await import("./popup.ts");
 
-Deno.test("updateUI - 全てのデータをストレージから読み込んで表示を更新する", async () => {
-  // arrange
-  const storageData: Partial<StorageData> = {
-    tabCount: 15,
-    dailyStats: { date: "2025-10-14", high: 20, low: 5 },
-    lastAvailablePreviousDayCount: 12,
-  };
-  const globalRecord = globalThis as Record<string, unknown>;
-  globalRecord.chrome = createMockChromeStorage(
-    (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
-      callback(storageData);
-    },
-  );
-  const doc = createTestDocument();
-  globalRecord.document = doc;
+Deno.test("updateUI", async (t) => {
+  await t.step("ストレージのデータを表示に反映する", async () => {
+    // arrange
+    const storageData: Partial<StorageData> = {
+      tabCount: 15,
+      dailyStats: { date: "2025-10-14", high: 20, low: 5 },
+      lastAvailablePreviousDayCount: 12,
+    };
+    const globalRecord = globalThis as Record<string, unknown>;
+    globalRecord.chrome = createMockChromeStorage(
+      (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
+        callback(storageData);
+      },
+    );
+    const doc = createTestDocument();
+    globalRecord.document = doc;
 
-  // act
-  updateUI();
-  await new Promise((resolve) => setTimeout(resolve, 10));
+    // act
+    updateUI();
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
-  // assert
-  assertStrictEquals(
-    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-    "15",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-    "20",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-    "5",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-    "12",
-  );
+    // assert
+    assertStrictEquals(
+      getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+      "15",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+      "20",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+      "5",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+      "12",
+    );
+  });
+
+  await t.step("空ストレージのデータはプレースホルダーを表示する", async () => {
+    // Arrange
+    const storageData: Partial<StorageData> = {};
+
+    globalRecord.chrome = createMockChromeStorage(
+      (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
+        setTimeout(() => callback(storageData), 0);
+      },
+    );
+    const doc = createTestDocument();
+    globalRecord.document = doc;
+
+    // Act
+    updateUI();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // Assert
+    assertStrictEquals(
+      getPopupElement(PopupElementId.TabCount, doc)?.textContent,
+      "...",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.HighCount, doc)?.textContent,
+      "...",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.LowCount, doc)?.textContent,
+      "...",
+    );
+    assertStrictEquals(
+      getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
+      "データなし",
+    );
+  });
 });
 
-Deno.test("updateUI - ストレージが空の場合にプレースホルダーを表示する", async () => {
-  // Arrange
-  const storageData: Partial<StorageData> = {};
+Deno.test("chrome.storage.onChanged.addListener", async (t) => {
+  await t.step("changes.tabCount - tabCountを更新", async () => {
+    // TODO
+  });
 
-  globalRecord.chrome = createMockChromeStorage(
-    (_keys: string[], callback: (result: Partial<StorageData>) => void) => {
-      setTimeout(() => callback(storageData), 0);
+  await t.step("changes.dailyStats - dailyStatsを更新", async () => {
+    // TODO
+  });
+
+  await t.step(
+    "changes.lastAvailablePreviousDayCount - lastAvailablePreviousDayCount",
+    async () => {
+      // TODO
     },
-  );
-  const doc = createTestDocument();
-  globalRecord.document = doc;
-
-  // Act
-  updateUI();
-  await new Promise((resolve) => setTimeout(resolve, 10));
-
-  // Assert
-  assertStrictEquals(
-    getPopupElement(PopupElementId.TabCount, doc)?.textContent,
-    "...",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.HighCount, doc)?.textContent,
-    "...",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.LowCount, doc)?.textContent,
-    "...",
-  );
-  assertStrictEquals(
-    getPopupElement(PopupElementId.PreviousDayLastCount, doc)?.textContent,
-    "データなし",
   );
 });
