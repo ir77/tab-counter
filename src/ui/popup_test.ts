@@ -67,10 +67,7 @@ const defaultStorageGet: ChromeStorageGet<StorageData> = (
 };
 const mockChrome = createMockChromeStorage(defaultStorageGet);
 globalRecord.chrome = mockChrome;
-const placeholderDocument = {
-  getElementById: (_id: string) => null,
-};
-globalRecord.document = placeholderDocument;
+globalRecord.document = { getElementById: (_id: string) => null };
 const {
   updateUI,
   getPopupElement,
@@ -88,16 +85,6 @@ function getStorageChangeListener(): StorageChangeListener {
   }
   return listener;
 }
-
-Deno.test.beforeEach(() => {
-  globalRecord.document = placeholderDocument;
-  resetChromeLocalGet(defaultStorageGet);
-});
-
-Deno.test.afterEach(() => {
-  globalRecord.document = placeholderDocument;
-  resetChromeLocalGet(defaultStorageGet);
-});
 
 Deno.test("updateUI - ストレージのデータを表示に反映する", async () => {
   // arrange
