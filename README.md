@@ -29,13 +29,12 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 
 - [Deno](https://deno.land/manual/getting_started/installation)
 
-### ビルド
+### ビルド、テスト、フォーマット
 
-以下のコマンドを実行すると、`src` ディレクトリのソースコードがビルドされ、`dist`
-ディレクトリに成果物が出力されます。
+以下のコマンドを実行すると、各種必要な処理がすべて実行されます。
 
 ```sh
-deno task build
+deno task all
 ```
 
 ### TODO
