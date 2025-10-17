@@ -7,5 +7,5 @@ export interface DailyStats {
 export interface StorageData {
   dailyStats?: DailyStats;
   tabCount?: number;
-  lastAvailablePreviousDayCount?: number;
+  lastPreviousDayCount?: number;
 }

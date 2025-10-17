@@ -8,12 +8,12 @@ export function calculateUpdatedStats(
   currentTabCount: number,
   dailyStats: DailyStats | undefined,
   lastStoredTabCount: number | undefined,
-  lastAvailablePreviousDayCount: number | undefined,
+  lastPreviousDayCount: number | undefined,
 ): StorageData {
   const today = new Date().toLocaleDateString("sv-SE");
 
   let todayStats: DailyStats;
-  let newPreviousDayCount: number | undefined = lastAvailablePreviousDayCount;
+  let newPreviousDayCount: number | undefined = lastPreviousDayCount;
 
   if (!dailyStats || dailyStats.date !== today) {
     if (dailyStats) {
@@ -35,6 +35,6 @@ export function calculateUpdatedStats(
   return {
     tabCount: currentTabCount,
     dailyStats: todayStats,
-    lastAvailablePreviousDayCount: newPreviousDayCount,
+    lastPreviousDayCount: newPreviousDayCount,
   };
 }

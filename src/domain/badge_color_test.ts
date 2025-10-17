@@ -168,7 +168,7 @@ Deno.test("determineBadgeColorは日付が異なる統計を無視して赤を�
   });
 });
 
-Deno.test("determineBadgeColorはlastAvailablePreviousDayCountがnullの場合は無視する", () => {
+Deno.test("determineBadgeColorはlastPreviousDayCountがnullの場合は無視する", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
     // Arrange
     const tabCount = 6;

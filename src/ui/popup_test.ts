@@ -48,7 +48,7 @@ Deno.test("updateUI", async (t) => {
     const storageData: Partial<StorageData> = {
       tabCount: 15,
       dailyStats: { date: "2025-10-14", high: 20, low: 5 },
-      lastAvailablePreviousDayCount: 12,
+      lastPreviousDayCount: 12,
     };
     const globalRecord = globalThis as Record<string, unknown>;
     globalRecord.chrome = createMockChromeStorage(
@@ -128,7 +128,7 @@ Deno.test("chrome.storage.onChanged.addListener", async (t) => {
   });
 
   await t.step(
-    "changes.lastAvailablePreviousDayCount - lastAvailablePreviousDayCount",
+    "changes.lastPreviousDayCount - lastPreviousDayCount",
     async () => {
       // TODO
     },

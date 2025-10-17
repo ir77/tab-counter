@@ -48,7 +48,7 @@ Deno.test("calculateUpdatedStatsは保存済み統計がない日に当日の統
       low: currentTabCount,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
@@ -80,7 +80,7 @@ Deno.test("calculateUpdatedStatsは日付が進んだ際に前日のタブ数を
     });
     assertStrictEquals(result.tabCount, currentTabCount);
     assertStrictEquals(
-      result.lastAvailablePreviousDayCount,
+      result.lastPreviousDayCount,
       lastStoredTabCount,
     );
   });
@@ -112,7 +112,7 @@ Deno.test("calculateUpdatedStatsは同日の高値と安値を更新する", () 
       low: existingStats.low,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
@@ -142,7 +142,7 @@ Deno.test("calculateUpdatedStatsは同日の安値を更新する", () => {
       low: currentTabCount,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
@@ -172,11 +172,11 @@ Deno.test("calculateUpdatedStatsは同日で高値・安値が更新されない
       low: existingStats.low,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
-Deno.test("calculateUpdatedStatsは日付が進んだ際に既存のlastAvailablePreviousDayCountを上書きする", () => {
+Deno.test("calculateUpdatedStatsは日付が進んだ際に既存のlastPreviousDayCountを上書きする", () => {
   withFixedDate("2025-10-02T09:00:00Z", () => {
     // Arrange
     const previousDayStats: DailyStats = {
@@ -205,7 +205,7 @@ Deno.test("calculateUpdatedStatsは日付が進んだ際に既存のlastAvailabl
     });
     assertStrictEquals(result.tabCount, currentTabCount);
     assertStrictEquals(
-      result.lastAvailablePreviousDayCount,
+      result.lastPreviousDayCount,
       lastStoredTabCount,
     );
   });
@@ -232,7 +232,7 @@ Deno.test("calculateUpdatedStatsはタブ数が0の場合も正常に動作す�
       low: 0,
     });
     assertStrictEquals(result.tabCount, 0);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
@@ -262,7 +262,7 @@ Deno.test("calculateUpdatedStatsは非常に大きなタブ数の場合も正常
       low: existingStats.low,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });
 
@@ -292,6 +292,6 @@ Deno.test("calculateUpdatedStatsは日付が進んだ際にlastStoredTabCountが
       low: currentTabCount,
     });
     assertStrictEquals(result.tabCount, currentTabCount);
-    assertStrictEquals(result.lastAvailablePreviousDayCount, undefined);
+    assertStrictEquals(result.lastPreviousDayCount, undefined);
   });
 });

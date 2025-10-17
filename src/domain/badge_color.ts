@@ -7,7 +7,7 @@ import type { DailyStats } from "./types.ts";
 export function determineBadgeColor(
   tabCount: number,
   dailyStats: DailyStats | undefined,
-  lastAvailablePreviousDayCount: number | undefined,
+  lastPreviousDayCount: number | undefined,
 ): "green" | "red" {
   const today = new Date().toLocaleDateString("sv-SE");
 
@@ -16,9 +16,9 @@ export function determineBadgeColor(
   }
 
   if (
-    lastAvailablePreviousDayCount !== undefined &&
-    lastAvailablePreviousDayCount !== null &&
-    tabCount <= lastAvailablePreviousDayCount
+    lastPreviousDayCount !== undefined &&
+    lastPreviousDayCount !== null &&
+    tabCount <= lastPreviousDayCount
   ) {
     return "green";
   }

@@ -11,11 +11,11 @@ async function updateTabCount(): Promise<void> {
   const {
     dailyStats,
     tabCount: lastStoredTabCount,
-    lastAvailablePreviousDayCount,
+    lastPreviousDayCount,
   }: StorageData = await chrome.storage.local.get([
     "dailyStats",
     "tabCount",
-    "lastAvailablePreviousDayCount",
+    "lastPreviousDayCount",
   ]);
 
   chrome.action.setBadgeText({ text: tabCount.toString() });
@@ -23,7 +23,7 @@ async function updateTabCount(): Promise<void> {
   const color = determineBadgeColor(
     tabCount,
     dailyStats,
-    lastAvailablePreviousDayCount,
+    lastPreviousDayCount,
   );
   chrome.action.setBadgeBackgroundColor({ color: color });
 
@@ -31,7 +31,7 @@ async function updateTabCount(): Promise<void> {
     tabCount,
     dailyStats,
     lastStoredTabCount,
-    lastAvailablePreviousDayCount,
+    lastPreviousDayCount,
   );
   await chrome.storage.local.set(updatedStorageData);
 }

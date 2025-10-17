@@ -35,11 +35,11 @@ function updateUI() {
     chrome.storage.local.get([
         "tabCount",
         "dailyStats",
-        "lastAvailablePreviousDayCount"
+        "lastPreviousDayCount"
     ], (result)=>{
         updateTabCountDisplay(getPopupElement(PopupElementId.TabCount), result.tabCount);
         updateDailyStatsDisplay(getPopupElement(PopupElementId.HighCount), getPopupElement(PopupElementId.LowCount), result.dailyStats);
-        updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), result.lastAvailablePreviousDayCount);
+        updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), result.lastPreviousDayCount);
     });
 }
 updateUI();
@@ -51,8 +51,8 @@ chrome.storage.onChanged.addListener((changes, namespace)=>{
         if (changes.dailyStats) {
             updateDailyStatsDisplay(getPopupElement(PopupElementId.HighCount), getPopupElement(PopupElementId.LowCount), changes.dailyStats.newValue);
         }
-        if (changes.lastAvailablePreviousDayCount) {
-            updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), changes.lastAvailablePreviousDayCount.newValue);
+        if (changes.lastPreviousDayCount) {
+            updatePreviousDayDisplay(getPopupElement(PopupElementId.PreviousDayContainer), getPopupElement(PopupElementId.PreviousDayLastCount), changes.lastPreviousDayCount.newValue);
         }
     }
 });
