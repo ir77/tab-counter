@@ -2,12 +2,12 @@
 
 [![Deno CI](https://github.com/ir77/tab-counter/actions/workflows/ci.yml/badge.svg)](https://github.com/ir77/tab-counter/actions/workflows/ci.yml)
 
-## 概要
+# 概要
 
 開いているタブの数をアイコンに表示するGoogle
 Chrome拡張機能です。さらに、日々のタブ利用状況を統計として記録し、ポップアップで詳細を確認できます。
 
-## 主な機能
+# 主な機能
 
 - 現在開いているタブの総数を、拡張機能アイコンのバッジにリアルタイムで表示します。
 - ポップアップで、以下の詳細な統計情報を確認できます。
@@ -15,7 +15,7 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
   - 今日の最高・最低タブ数
   - 前日のセッション終了時のタブ数
 
-## 導入方法
+# 導入方法
 
 1. このリポジトリをダウンロードまたはクローンします。
 2. Chromeで `chrome://extensions` を開きます。
@@ -23,13 +23,13 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 4. 「パッケージ化されていない拡張機能を読み込む」をクリックし、このリポジトリの
    `dist` フォルダを選択します。
 
-## 開発
+# 開発
 
 このプロジェクトは [Deno](https://deno.land/) を使用して開発されています。
 
 - [Deno](https://deno.land/manual/getting_started/installation)
 
-### ビルド、テスト、フォーマット
+## ビルド、テスト、フォーマット
 
 以下のコマンドを実行すると、各種必要な処理がすべて実行されます。
 
@@ -37,9 +37,12 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 deno task all
 ```
 
-### TODO
+## TODO
 
-#### **拡張機能アイコンの追加 (Add Extension Icon)**
+### 
+- [ ] background.tsのテスト追加
+
+### **拡張機能アイコンの追加 (Add Extension Icon)**
 
 - [ ] `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
       を追加する
