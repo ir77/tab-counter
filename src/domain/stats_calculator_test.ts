@@ -1,29 +1,15 @@
 import { assertEquals, assertStrictEquals } from "assert/mod.ts";
+import { FakeTime } from "std/testing/time.ts";
 import type { DailyStats } from "./types.ts";
 import { calculateUpdatedStats } from "./stats_calculator.ts";
 
 function withFixedDate<T>(isoDate: string, fn: () => T): T {
-  const realDate = Date;
-  const fixedTime = new Date(isoDate).getTime();
-
-  class FixedDate extends Date {
-    constructor(value?: number | string | Date) {
-      super(value ?? fixedTime);
-    }
-
-    static override now(): number {
-      return fixedTime;
-    }
-  }
-
-  FixedDate.parse = realDate.parse;
-  FixedDate.UTC = realDate.UTC;
-  (globalThis as Record<string, unknown>).Date = FixedDate;
+  const fakeTime = new FakeTime(isoDate);
 
   try {
     return fn();
   } finally {
-    (globalThis as Record<string, unknown>).Date = realDate;
+    fakeTime.restore();
   }
 }
 
