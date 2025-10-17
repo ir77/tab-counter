@@ -1,4 +1,5 @@
 import { assertStrictEquals } from "assert/mod.ts";
+import { FakeTime } from "std/testing/time.ts";
 import type { DailyStats } from "./types.ts";
 import { determineBadgeColor } from "./badge_color.ts";
 
@@ -28,7 +29,9 @@ function withFixedDate<T>(isoDate: string, fn: () => T): T {
 }
 
 Deno.test("determineBadgeColorはタブ数が少ない場合に緑を返す", () => {
-  withFixedDate("2025-10-02T09:00:00Z", () => {
+  const fakeTime = new FakeTime("2025-10-02T09:00:00Z");
+
+  try {
     // Arrange
     const tabCount = 4;
 
@@ -37,7 +40,9 @@ Deno.test("determineBadgeColorはタブ数が少ない場合に緑を返す", ()
 
     // Assert
     assertStrictEquals(color, "green");
-  });
+  } finally {
+    fakeTime.restore();
+  }
 });
 
 Deno.test("determineBadgeColorは前日基準を優先して緑を返す", () => {

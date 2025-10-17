@@ -39,10 +39,6 @@ deno task build
 ```
 
 ### TODO
-#### **テストの拡充 (Test Expansion)**
-
-- [ ] **`popup.ts` の単体テスト**
-  - [ ] `chrome.storage.onChanged.addListener` のユニットテスト
 
 #### **拡張機能アイコンの追加 (Add Extension Icon)**
 
