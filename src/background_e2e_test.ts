@@ -1,6 +1,6 @@
 /// <reference types="npm:@types/chrome" />
 
-import puppeteer, { type Browser, type Page } from "puppeteer";
+import puppeteer, { type Browser } from "puppeteer";
 import { assertEquals } from "assert/mod.ts";
 import { join } from "std/path/mod.ts";
 import type { DailyStats } from "./domain/types.ts";
@@ -26,18 +26,6 @@ async function launchBrowserWithExtension(): Promise<Browser> {
   });
 
   return browser;
-}
-
-/**
- * 拡張機能のバックグラウンドページを取得する
- * 注: Chrome ExtensionsのService Workerはpageを持たないため、
- * この関数は将来の実装検討用のスタブとして保持
- * 実際の実装にはworker.evaluate()を直接使用すること
- */
-function _getExtensionBackgroundPage(_browser: Browser): Page | null {
-  // Service WorkerはPageを持たないため、null を返す
-  // 将来的にはworkerオブジェクトを返すように変更する可能性がある
-  return null;
 }
 
 /**
