@@ -52,8 +52,7 @@ function createMockChrome() {
     // テスト用のヘルパー
     _test: {
       setTabs: (tabs: MockTab[]) => {
-        mockTabs.length = 0;
-        mockTabs.push(...tabs);
+        mockTabs.splice(0, mockTabs.length, ...tabs);
       },
       setStorage: (data: MockStorageData) => {
         mockStorage = data;
