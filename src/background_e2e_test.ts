@@ -3,6 +3,7 @@
 import puppeteer, { type Browser, type Page } from "puppeteer";
 import { assertEquals } from "assert/mod.ts";
 import { join } from "std/path/mod.ts";
+import type { DailyStats } from "./domain/types.ts";
 
 /**
  * E2E テストヘルパー関数
@@ -29,27 +30,14 @@ async function launchBrowserWithExtension(): Promise<Browser> {
 
 /**
  * 拡張機能のバックグラウンドページを取得する
- * 注: 将来のテスト拡張用に保持
+ * 注: Chrome ExtensionsのService Workerはpageを持たないため、
+ * この関数は将来の実装検討用のスタブとして保持
+ * 実際の実装にはworker.evaluate()を直接使用すること
  */
-async function _getExtensionBackgroundPage(browser: Browser): Promise<Page> {
-  // Service Workerターゲットを探す
-  const targets = await browser.targets();
-  const serviceWorkerTarget = targets.find((target) =>
-    target.type() === "service_worker"
-  );
-
-  if (!serviceWorkerTarget) {
-    throw new Error("拡張機能のService Workerが見つかりません");
-  }
-
-  const worker = await serviceWorkerTarget.worker();
-  if (!worker) {
-    throw new Error("Service Workerを取得できません");
-  }
-
-  // バックグラウンドページとして扱えるページを返す
-  // 注: Service WorkerはPageではないため、evaluateなどを使用
-  return serviceWorkerTarget.page() as unknown as Page;
+function _getExtensionBackgroundPage(_browser: Browser): Page | null {
+  // Service WorkerはPageを持たないため、null を返す
+  // 将来的にはworkerオブジェクトを返すように変更する可能性がある
+  return null;
 }
 
 /**
@@ -188,11 +176,7 @@ Deno.test({
         "dailyStatsがストレージに保存されていません",
       );
 
-      const dailyStats = storage.dailyStats as {
-        date: string;
-        high: number;
-        low: number;
-      };
+      const dailyStats = storage.dailyStats as DailyStats;
 
       assertEquals(
         typeof dailyStats.date,
