@@ -37,10 +37,18 @@ Chrome拡張機能です。さらに、日々のタブ利用状況を統計と�
 deno task all
 ```
 
-## TODO
+### E2Eテスト
 
-### 
-- [ ] background.tsのテスト追加
+実際のブラウザ環境でのE2Eテストを実行するには:
+
+```sh
+deno task build
+deno task test:e2e
+```
+
+詳細については、[README_E2E_TESTING.md](./README_E2E_TESTING.md)を参照してください。
+
+## TODO
 
 ### **拡張機能アイコンの追加 (Add Extension Icon)**
 

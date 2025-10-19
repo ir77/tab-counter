@@ -3,6 +3,7 @@
     "check": "deno check .",
     "lint": "deno lint",
     "test": "deno test --allow-read --coverage=coverage",
+    "test:e2e": "deno test --allow-all --allow-env --allow-net --allow-read --allow-write --allow-run src/*e2e_test.ts",
     "coverage": "deno coverage coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
@@ -24,6 +25,8 @@
     "deno_emit": "https://deno.land/x/emit@0.40.0/mod.ts",
     "std/": "https://deno.land/std@0.224.0/",
     "assert/": "https://deno.land/std@0.208.0/assert/",
-    "deno-dom": "jsr:@b-fuze/deno-dom"
+    "deno-dom": "jsr:@b-fuze/deno-dom",
+    "puppeteer": "npm:puppeteer@^23.0.0",
+    "puppeteer-core": "npm:puppeteer-core@^23.0.0"
   }
 }
