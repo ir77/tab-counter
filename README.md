@@ -40,7 +40,7 @@ deno task all
 ## TODO
 
 ### **Test**
-- deno run --allow-all npm:playwright installの高速化
+
 - E2Eテストの拡充
   - background.tsのテスト追加
 
