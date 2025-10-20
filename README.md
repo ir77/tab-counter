@@ -39,8 +39,10 @@ deno task all
 
 ## TODO
 
-### 
-- [ ] background.tsのテスト追加
+### **Test**
+- [ ] playwright.ymlをci.ymlへ取り込み
+- [ ] E2Eテストの拡充
+  - [ ] background.tsのテスト追加
 
 ### **拡張機能アイコンの追加 (Add Extension Icon)**
 
