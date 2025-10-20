@@ -21,7 +21,7 @@ jobs:
           cache: true
 
       - name: Install Playwright browsers
-        run: deno run --allow-all npm:playwright install --with-deps
+        run: deno run --allow-all npm:playwright install chromium --with-deps
 
       - name: Run deno task all
         run: deno task all
