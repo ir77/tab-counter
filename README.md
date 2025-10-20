@@ -40,14 +40,13 @@ deno task all
 ## TODO
 
 ### **Test**
-- [ ] playwright.ymlをci.ymlへ取り込み
-- [ ] deno run --allow-all npm:playwright installの高速化
-- [ ] E2Eテストの拡充
-  - [ ] background.tsのテスト追加
+- deno run --allow-all npm:playwright installの高速化
+- E2Eテストの拡充
+  - background.tsのテスト追加
 
 ### **拡張機能アイコンの追加 (Add Extension Icon)**
 
-- [ ] `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
+- `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
       を追加する
-- [ ] `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
-- [ ] `manifest.json` を更新し、全サイズのアイコンパスを登録する
+- `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
+- `manifest.json` を更新し、全サイズのアイコンパスを登録する
