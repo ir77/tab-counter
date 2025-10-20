@@ -27,6 +27,7 @@
     "jsr:@std/testing@^1.0.16": "1.0.16",
     "npm:@playwright/test@^1.56.1": "1.56.1",
     "npm:@types/chrome@*": "0.1.12",
+    "npm:create-playwright@latest": "1.17.139",
     "npm:playwright@*": "1.56.1"
   },
   "jsr": {
@@ -155,6 +156,10 @@
     },
     "@types/har-format@1.2.16": {
       "integrity": "sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A=="
+    },
+    "create-playwright@1.17.139": {
+      "integrity": "sha512-be59wywAD7GxnTqCCc2T0Ujps9t4MYpVWxbP9hT2tOBRrRKBwMcU1HhLzhT70FiaLPqxuImqQQFp5s5yO9Qp3A==",
+      "bin": true
     },
     "fsevents@2.3.2": {
       "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",

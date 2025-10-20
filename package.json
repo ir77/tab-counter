@@ -1,0 +1,27 @@
+{
+  "name": "tab-counter",
+  "version": "1.0.0",
+  "description": "[![Deno CI](https://github.com/ir77/tab-counter/actions/workflows/ci.yml/badge.svg)](https://github.com/ir77/tab-counter/actions/workflows/ci.yml)",
+  "main": "index.js",
+  "dependencies": {
+    "create-playwright": "^1.17.139",
+    "playwright": "^1.56.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.8.1"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ir77/tab-counter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ir77/tab-counter/issues"
+  },
+  "homepage": "https://github.com/ir77/tab-counter#readme"
+}
