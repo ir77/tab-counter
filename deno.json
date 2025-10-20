@@ -1,9 +1,9 @@
 {
   "tasks": {
     "check": "deno check . && deno lint",
-    "test": "deno test --allow-read --coverage=coverage",
+    "test": "deno test --allow-read --coverage=reports/coverage",
     "test:e2e": "deno run --allow-all npm:playwright test",
-    "coverage": "deno coverage coverage",
+    "coverage": "deno coverage reports/coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
     "all": "deno task check && deno task test && deno task test:e2e && deno task build && deno task fmt"
