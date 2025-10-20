@@ -3,10 +3,11 @@
     "check": "deno check .",
     "lint": "deno lint",
     "test": "deno test --allow-read --coverage=coverage",
+    "test:e2e": "deno run --allow-all npm:playwright test",
     "coverage": "deno coverage coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
-    "all": "deno task check && deno task lint && deno task test && deno task build && deno task fmt"
+    "all": "deno task check && deno task lint && deno task test && deno task test:e2e && deno task build && deno task fmt"
   },
   "fmt": {
     "exclude": ["dist", "*.md"]
