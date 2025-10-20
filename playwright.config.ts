@@ -39,14 +39,6 @@ export default defineConfig({
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        headless: false,
-        // Chrome拡張をロードする設定
-        launchOptions: {
-          args: [
-            `--disable-extensions-except=${process.cwd()}/dist`,
-            `--load-extension=${process.cwd()}/dist`,
-          ],
-        },
       },
     },
     // {
