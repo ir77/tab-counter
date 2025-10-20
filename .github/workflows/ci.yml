@@ -20,6 +20,11 @@ jobs:
           deno-version: v2.5.x
           cache: true
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('deno.json') }}
       - name: Install Playwright browsers
         run: deno run --allow-all npm:playwright install --with-deps
 
