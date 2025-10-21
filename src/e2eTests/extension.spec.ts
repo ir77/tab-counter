@@ -60,7 +60,24 @@ test.describe("popup.html", () => {
     }
   });
 
-  // check lowCount when all tabs are closed
+  test("タブ数を最初より減らすと現在のタブ数と今日の最低だけ更新されること", async ({ page, context }) => {
+    const initialCount = context.pages().length;
+
+    await expect(page.locator("#tabCount")).toHaveText(String(initialCount));
+    await expect(page.locator("#highCount")).toHaveText(String(initialCount));
+    await expect(page.locator("#lowCount")).toHaveText(String(initialCount));
+
+    const closablePages = context.pages().filter((candidate) =>
+      candidate !== page
+    );
+    await closablePages[0].close();
+    const expectedCount = initialCount - 1;
+
+    await expect(page.locator("#tabCount")).toHaveText(String(expectedCount));
+    await expect(page.locator("#highCount")).toHaveText(String(initialCount));
+    await expect(page.locator("#lowCount")).toHaveText(String(expectedCount));
+  });
+
   // check yesterday data when no data exists
   // check yersterday data display
 });
