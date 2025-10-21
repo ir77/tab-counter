@@ -38,7 +38,7 @@ test.describe("popup.html", () => {
     const createdPages: Page[] = [];
     const initialCount = await readTabCount(page);
 
-    for (let step = 1; step <= 5; step++) {
+    for (let step = 1; step <= 10; step++) {
       const newTab = await context.newPage();
       createdPages.push(newTab);
 
