@@ -1,32 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
 
-async function readPopupStats(
-  popupPage: Page,
-): Promise<{ tabCount: number; high: number; low: number }> {
-  const tabCountLocator = popupPage.locator("#tabCount");
-  const highLocator = popupPage.locator("#highCount");
-  const lowLocator = popupPage.locator("#lowCount");
-
-  await Promise.all([
-    expect(tabCountLocator).toHaveText(/\d+/),
-    expect(highLocator).toHaveText(/\d+/),
-    expect(lowLocator).toHaveText(/\d+/),
-  ]);
-
-  const [tabCountText, highText, lowText] = await Promise.all([
-    tabCountLocator.textContent(),
-    highLocator.textContent(),
-    lowLocator.textContent(),
-  ]);
-
-  return {
-    tabCount: Number.parseInt(tabCountText as string, 10),
-    high: Number.parseInt(highText as string, 10),
-    low: Number.parseInt(lowText as string, 10),
-  };
-}
-
 test.describe("popup.html", () => {
   test.beforeEach(async ({ extensionId, page }) => {
     const popupUrl = `chrome-extension://${extensionId}/popup.html`;
@@ -56,9 +30,9 @@ test.describe("popup.html", () => {
 
   test("タブの増減に合わせてタブ数が更新されること", async ({ page, context }) => {
     const createdPages: Page[] = [];
-    const { tabCount: initialCount, high, low } = await readPopupStats(page);
-    let expectedHigh = high;
-    let expectedLow = low;
+    const initialCount = context.pages().length;
+    let expectedHigh = initialCount;
+    const expectedLow = initialCount;
 
     for (let step = 1; step <= 10; step++) {
       const newTab = await context.newPage();
@@ -78,10 +52,9 @@ test.describe("popup.html", () => {
       const tabToClose = createdPages[i];
       await tabToClose.close();
 
-      const expectedCount = initialCount + i;
-      expectedLow = Math.min(expectedLow, expectedCount);
-
-      await expect(page.locator("#tabCount")).toHaveText(String(expectedCount));
+      await expect(page.locator("#tabCount")).toHaveText(
+        String(initialCount + i),
+      );
       await expect(page.locator("#highCount")).toHaveText(String(expectedHigh));
       await expect(page.locator("#lowCount")).toHaveText(String(expectedLow));
     }
