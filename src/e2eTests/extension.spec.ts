@@ -78,6 +78,8 @@ test.describe("popup.html", () => {
     await expect(page.locator("#lowCount")).toHaveText(String(expectedCount));
   });
 
-  // check yesterday data when no data exists
-  // check yersterday data display
+  // previousDayLastCount のテスト
+  // <div id="previousDayContainer">
+  //   <h2>前日の最後の値: <span id="previousDayLastCount">...</span></h2>
+  // </div>
 });
