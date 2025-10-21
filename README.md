@@ -44,6 +44,9 @@ deno task all
 - E2Eテストの拡充
   - background.tsのテスト追加
 
+### **7日分のデータ表示機能の追加**
+  
+
 ### **拡張機能アイコンの追加 (Add Extension Icon)**
 
 - `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
