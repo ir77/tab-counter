@@ -57,7 +57,7 @@ test.describe("popup.html", () => {
     const createdPages: Page[] = [];
     const initialCount = await readTabCount(page);
 
-    for (let step = 1; step <= 3; step++) {
+    for (let step = 1; step <= 5; step++) {
       const newTab = await context.newPage();
       createdPages.push(newTab);
 
@@ -68,13 +68,12 @@ test.describe("popup.html", () => {
       );
     }
 
-    while (createdPages.length > 0) {
-      const expectedCount = initialCount + createdPages.length - 1;
-      const tabToClose = createdPages.pop();
-      await tabToClose?.close();
+    for (let i = createdPages.length - 1; i >= 0; i--) {
+      const tabToClose = createdPages[i];
+      await tabToClose.close();
 
       await expect(page.locator("#tabCount")).toHaveText(
-        String(expectedCount),
+        String(initialCount + i),
       );
     }
   });
