@@ -78,8 +78,22 @@ test.describe("popup.html", () => {
     await expect(page.locator("#lowCount")).toHaveText(String(expectedCount));
   });
 
-  // previousDayLastCount のテスト
-  // <div id="previousDayContainer">
-  //   <h2>前日の最後の値: <span id="previousDayLastCount">...</span></h2>
-  // </div>
+  test("前日の最終値をページ内から更新できる", async ({ page }) => {
+    await page.evaluate(async () => {
+      await chrome.storage.local.clear();
+      await chrome.storage.local.set({ lastPreviousDayCount: 42 });
+    });
+
+    await expect(page.locator("#previousDayLastCount")).toHaveText("42");
+  });
+
+  test("前日の最終値が存在しない場合はデータなしを表示する", async ({ page }) => {
+    await page.evaluate(async () => {
+      await chrome.storage.local.clear();
+    });
+
+    await expect(page.locator("#previousDayLastCount")).toHaveText(
+      "データなし",
+    );
+  });
 });
