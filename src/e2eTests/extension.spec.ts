@@ -1,19 +1,5 @@
-import type { BrowserContext, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures.ts";
-
-async function closeOtherTabs(
-  context: BrowserContext,
-  keepPages: Page[],
-) {
-  for (const existing of context.pages()) {
-    if (keepPages.includes(existing)) continue;
-    try {
-      await existing.close();
-    } catch (_error) {
-      // 無視できる失敗はテストの安定性に影響しないため握りつぶす
-    }
-  }
-}
 
 async function readTabCount(popupPage: Page): Promise<number> {
   const tabCountLocator = popupPage.locator("#tabCount");
@@ -23,14 +9,9 @@ async function readTabCount(popupPage: Page): Promise<number> {
 }
 
 test.describe("popup.html", () => {
-  test.beforeEach(async ({ extensionId, page, context }) => {
-    await closeOtherTabs(context, [page]);
+  test.beforeEach(async ({ extensionId, page }) => {
     const popupUrl = `chrome-extension://${extensionId}/popup.html`;
     await page.goto(popupUrl);
-  });
-
-  test.afterEach(async ({ context, page }) => {
-    await closeOtherTabs(context, [page]);
   });
 
   test("popup.html に見出しが表示されること", async ({ page }) => {
