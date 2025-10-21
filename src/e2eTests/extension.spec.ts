@@ -22,10 +22,6 @@ async function readTabCount(popupPage: Page): Promise<number> {
   return Number.parseInt(text ?? "NaN", 10);
 }
 
-async function expectTabCount(popupPage: Page, expected: number) {
-  await expect(popupPage.locator("#tabCount")).toHaveText(String(expected));
-}
-
 test.describe("popup.html", () => {
   test.beforeEach(async ({ extensionId, page, context }) => {
     await closeOtherTabs(context, [page]);
@@ -64,7 +60,9 @@ test.describe("popup.html", () => {
 
         await newTab.goto(`https://example.com/?tab=${step}`);
 
-        await expectTabCount(page, initialCount + step);
+        await expect(page.locator("#tabCount")).toHaveText(
+          String(initialCount + step),
+        );
       }
 
       while (createdPages.length > 0) {
@@ -72,7 +70,9 @@ test.describe("popup.html", () => {
         const tabToClose = createdPages.pop();
         await tabToClose?.close();
 
-        await expectTabCount(page, expectedCount);
+        await expect(page.locator("#tabCount")).toHaveText(
+          String(expectedCount),
+        );
       }
     } finally {
       for (const remaining of createdPages) {
