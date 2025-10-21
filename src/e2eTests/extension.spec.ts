@@ -29,6 +29,10 @@ test.describe("popup.html", () => {
     await page.goto(popupUrl);
   });
 
+  test.afterEach(async ({ context, page }) => {
+    await closeOtherTabs(context, [page]);
+  });
+
   test("popup.html に見出しが表示されること", async ({ page }) => {
     const headings = [
       { level: 1, name: /現在のタブ数は/ },
@@ -53,35 +57,25 @@ test.describe("popup.html", () => {
     const createdPages: Page[] = [];
     const initialCount = await readTabCount(page);
 
-    try {
-      for (let step = 1; step <= 3; step++) {
-        const newTab = await context.newPage();
-        createdPages.push(newTab);
+    for (let step = 1; step <= 3; step++) {
+      const newTab = await context.newPage();
+      createdPages.push(newTab);
 
-        await newTab.goto(`https://example.com/?tab=${step}`);
+      await newTab.goto(`https://example.com/?tab=${step}`);
 
-        await expect(page.locator("#tabCount")).toHaveText(
-          String(initialCount + step),
-        );
-      }
+      await expect(page.locator("#tabCount")).toHaveText(
+        String(initialCount + step),
+      );
+    }
 
-      while (createdPages.length > 0) {
-        const expectedCount = initialCount + createdPages.length - 1;
-        const tabToClose = createdPages.pop();
-        await tabToClose?.close();
+    while (createdPages.length > 0) {
+      const expectedCount = initialCount + createdPages.length - 1;
+      const tabToClose = createdPages.pop();
+      await tabToClose?.close();
 
-        await expect(page.locator("#tabCount")).toHaveText(
-          String(expectedCount),
-        );
-      }
-    } finally {
-      for (const remaining of createdPages) {
-        try {
-          await remaining.close();
-        } catch (_) {
-          // すでに閉じている場合は無視
-        }
-      }
+      await expect(page.locator("#tabCount")).toHaveText(
+        String(expectedCount),
+      );
     }
   });
 });
