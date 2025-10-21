@@ -4,8 +4,8 @@ import { expect, test } from "./fixtures.ts";
 async function readTabCount(popupPage: Page): Promise<number> {
   const tabCountLocator = popupPage.locator("#tabCount");
   await expect(tabCountLocator).toHaveText(/\d+/);
-  const text = await tabCountLocator.textContent();
-  return Number.parseInt(text ?? "NaN", 10);
+  const text = await tabCountLocator.textContent() as string;
+  return Number.parseInt(text, 10);
 }
 
 test.describe("popup.html", () => {
