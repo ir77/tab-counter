@@ -50,3 +50,7 @@ deno task all
       を追加する
 - `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
 - `manifest.json` を更新し、全サイズのアイコンパスを登録する
+
+### 週次・月次サマリー機能
+
+chrome.alarms でバッチ集計し chrome.storage.local に保持、ポップアップで折れ線グラフ表示。利用者が長期傾向を把握できるメリット、集計・描画ロジックが膨らむデメリット。参考: chrome.alarms、chrome.storage。
