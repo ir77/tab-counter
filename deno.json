@@ -6,7 +6,8 @@
     "coverage": "deno coverage reports/coverage",
     "build": "deno run -A build.ts",
     "fmt": "deno fmt",
-    "all": "deno task check && deno task test && deno task test:e2e && deno task build && deno task fmt"
+    "update": "deno outdated --update",
+    "all": "deno task update && deno task check && deno task test && deno task test:e2e && deno task build && deno task fmt"
   },
   "fmt": {
     "exclude": ["dist", "*.md"]
@@ -26,6 +27,6 @@
     "deno_emit": "https://deno.land/x/emit@0.40.0/mod.ts",
     "std/": "https://deno.land/std@0.224.0/",
     "assert/": "https://deno.land/std@0.208.0/assert/",
-    "deno-dom": "jsr:@b-fuze/deno-dom"
+    "deno-dom": "jsr:@b-fuze/deno-dom@0.1.56"
   }
 }
