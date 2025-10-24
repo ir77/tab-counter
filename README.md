@@ -44,9 +44,6 @@ deno task all
 - E2Eテストの拡充
   - background.tsのテスト追加
 
-### **7日分のデータ表示機能の追加**
-  
-
 ### **拡張機能アイコンの追加 (Add Extension Icon)**
 
 - `images` ディレクトリを作成し、`128x128` のアイコン (`icon128.png`)
@@ -54,6 +51,8 @@ deno task all
 - `48x48`, `32x32`, `16x16` の各サイズのアイコンを追加する
 - `manifest.json` を更新し、全サイズのアイコンパスを登録する
 
+### **7日分のデータ表示機能の追加**
+  
 ### 週次・月次サマリー機能
 
 chrome.alarms でバッチ集計し chrome.storage.local に保持、ポップアップで折れ線グラフ表示。利用者が長期傾向を把握できるメリット、集計・描画ロジックが膨らむデメリット。参考: chrome.alarms、chrome.storage。
