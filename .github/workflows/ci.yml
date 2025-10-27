@@ -57,7 +57,7 @@ jobs:
         run: deno run --allow-all npm:playwright install chromium --with-deps
       - name: Run e2e tests
         run: deno task test:e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
