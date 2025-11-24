@@ -9,9 +9,22 @@
 ## 1. フェーズ別タスク
 
 ### フェーズ1: 現状棚卸し (1日)
-- [ ] Deno 専用 API 利用箇所の洗い出し (env, fs, URL imports など)。
-- [ ] `deno.json` 内タスク・lint 設定の整理。
-- [ ] Chrome 拡張ビルドの成果物 (配置/命名) を記録。
+- [x] Deno 専用 API 利用箇所の洗い出し (env, fs, URL imports など)。
+- [x] `deno.json` 内タスク・lint 設定の整理。
+- [x] Chrome 拡張ビルドの成果物 (配置/命名) を記録。
+
+#### フェーズ1メモ
+- **Deno専用API/URL import**
+	- `build.ts` が `deno_emit`, `std/fs` 系 (`copy`, `emptyDir`), `std/datetime/format.ts` を利用し、`Deno.writeTextFile`, `Deno.readTextFile`, `Deno.env` に依存。
+	- ドメイン/ UI テスト (`src/domain/*_test.ts`, `src/ui/popup_test.ts`) は `Deno.test`, `Deno.readTextFileSync`, `FakeTime` (`std/testing/time.ts`), `assert/mod.ts` など Deno 標準モジュールを使用。
+	- `background.ts` / `ui/popup.ts` の先頭で `/// <reference types="npm:@types/chrome" />` を利用し、Deno の npm 互換経由で型を参照。`.ts` 拡張子付き import も全体で使用されており、Vite では解決方法を決める必要あり。
+- **deno.json タスク/設定**
+	- `check`, `test`, `test:e2e`, `coverage`, `build`, `fmt`, `update`, `all` を `deno task` で運用。`test:e2e` は `deno run --allow-all npm:playwright test` をラップ。
+	- `fmt`/`lint` で `dist` や `*.md` を除外。`compilerOptions` は `dom`, `deno.window`, `types: npm:@types/chrome` を指定。
+	- `imports` に `@playwright/test`, `@std/testing`, `deno_emit`, `std/`, `assert/`, `deno-dom` を登録し、URL import 解決に依存。
+- **Chrome拡張ビルド成果物**
+	- `build.ts` により `dist/background.js`, `dist/popup.js`, `dist/popup.html`, `dist/popup.css`, `dist/manifest.json` を生成。
+	- `src/manifest.json` をベースにしつつ `version` を `1.${format(new Date(), "yy.MMdd.HHmm")}` へ上書き後、`dist` にコピー。拡張側は `background.service_worker` と `action.default_popup` でこれらファイルを参照。
 
 ### フェーズ2: Node + Vite 足場構築 (2日)
 - [ ] `package.json` 作成 (Node 20 LTS 前提、npm scripts ひな形追加)。
