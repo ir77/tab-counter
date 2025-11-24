@@ -27,10 +27,15 @@
 	- `src/manifest.json` をベースにしつつ `version` を `1.${format(new Date(), "yy.MMdd.HHmm")}` へ上書き後、`dist` にコピー。拡張側は `background.service_worker` と `action.default_popup` でこれらファイルを参照。
 
 ### フェーズ2: Node + Vite 足場構築 (2日)
-- [ ] `package.json` 作成 (Node 20 LTS 前提、npm scripts ひな形追加)。
-- [ ] `tsconfig.*` と Vite 設定 (`vite.config.ts`) 追加。Manifest や HTML のエントリ設定。
+- [x] `package.json` 作成 (Node 20 LTS 前提、npm scripts ひな形追加)。
+- [x] `tsconfig.*` と Vite 設定 (`vite.config.ts`) 追加。Manifest や HTML のエントリ設定。
 - [ ] ESLint/Prettier などフォーマット/静的解析ツール導入方針を決め、設定投入。
-- [ ] `npm run dev`/`build`/`lint`/`fmt`/`test` の最小スクリプトを定義。
+- [x] `npm run dev`/`build`/`lint`/`fmt`/`test` の最小スクリプトを定義。
+
+#### フェーズ2メモ（進行中）
+- `package.json` に Node 20 以上と Vite/Vitest/Playwright/TypeScript/ESLint/Prettier など最小 devDependencies を定義し、`dev/build/lint/fmt/test/test:unit/test:e2e/all` スクリプトを追加。
+- `tsconfig.json`・`tsconfig.node.json` を追加し、ブラウザ向け/Node向けの解決を分離。`moduleResolution: "Bundler"` として Vite の import 解決に合わせた。
+- `vite.config.ts` で `src/background.ts` と `src/ui/popup.html` をエントリに設定。ビルド時に `manifest.json` を `dist/` へコピーする簡易プラグインを作成し、`dist/background.js` を維持する命名ルールを定義。
 
 ### フェーズ3: ソース変換 (3日)
 - [ ] Deno 特有の import URL や `.ts` 拡張子指定を Node 解決方式へ変更。
