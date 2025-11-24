@@ -4,6 +4,7 @@
 - 現行: Deno + TypeScript + Manifest V3。
 - 目標: Node.js + Vite をベースにビルド、Vitest + Playwright でテストを回せる状態にする。
 - 成果物: npm scripts によるビルド/テスト/フォーマット、CI 連携、ドキュメント更新まで完了。
+- 何か問題があれば、このtask.mdを更新しながら進める。
 
 ## 1. フェーズ別タスク
 
