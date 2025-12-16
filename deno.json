@@ -22,7 +22,7 @@
   },
   "nodeModulesDir": "auto",
   "imports": {
-    "@playwright/test": "npm:@playwright/test@^1.56.1",
+    "@playwright/test": "npm:@playwright/test@^1.57.0",
     "@std/testing": "jsr:@std/testing@^1.0.16",
     "deno_emit": "https://deno.land/x/emit@0.40.0/mod.ts",
     "std/": "https://deno.land/std@0.224.0/",
