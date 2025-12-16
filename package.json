@@ -18,12 +18,17 @@
     "all": "npm run lint && npm run test && npm run build && npm run fmt"
   },
   "devDependencies": {
+    "@eslint/js": "^9.12.0",
     "@playwright/test": "^1.48.2",
     "@types/chrome": "^0.0.275",
     "@types/node": "^22.7.5",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
     "eslint": "^9.12.0",
+    "eslint-plugin-vitest": "^0.5.4",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.13.0",
     "vite": "^5.4.10",
     "vitest": "^2.1.3"
   }
