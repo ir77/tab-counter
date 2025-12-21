@@ -1,0 +1,38 @@
+{
+  "name": "Tab Counter Devcontainer",
+  "image": "denoland/deno:debian-2.6.0",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "vscode",
+      "uid": "1000",
+      "gid": "1000",
+      "installZsh": true
+    }
+  },
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "DENO_DIR": "/home/vscode/.cache/deno"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "denoland.vscode-deno",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "deno.enable": true,
+        "deno.unstable": true,
+        "deno.lint": true,
+        "deno.suggest.imports.hosts": {
+          "https://deno.land": true,
+          "npm:": true
+        }
+      }
+    }
+  },
+  "postCreateCommand": "deno run --allow-all npm:playwright install --with-deps chromium && deno task all",
+  "hostRequirements": {
+    "memory": "4gb",
+    "cpus": 2
+  }
+}
